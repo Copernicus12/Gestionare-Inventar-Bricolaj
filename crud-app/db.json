@@ -1,0 +1,84 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "title": "Product 1",
+      "price": 100,
+      "stock": 50,
+      "cod_culoare": "Red",
+      "sezon": "Spring",
+      "category": "Clothing",
+      "department": "Men"
+    },
+    {
+      "id": "2",
+      "title": "Product 2",
+      "price": 200,
+      "stock": 30,
+      "cod_culoare": "Blue",
+      "sezon": "Summer",
+      "category": "Clothing",
+      "department": "Women"
+    },
+    {
+      "id": "3",
+      "title": "Product 3",
+      "price": 150,
+      "stock": 20,
+      "cod_culoare": "Green",
+      "sezon": "Autumn",
+      "category": "Accessories",
+      "department": "Unisex"
+    },
+    {
+      "id": "4",
+      "title": "Product 4",
+      "price": 250,
+      "stock": 10,
+      "cod_culoare": "Yellow",
+      "sezon": "Winter",
+      "category": "Electronics",
+      "department": "Kids"
+    },
+    {
+      "id": "5",
+      "title": "Product 5",
+      "price": 300,
+      "stock": 100,
+      "cod_culoare": "Black",
+      "sezon": "All Year",
+      "category": "Furniture",
+      "department": "Home"
+    },
+    {
+      "id": "6",
+      "title": "Product 6",
+      "price": 50,
+      "stock": 200,
+      "cod_culoare": "Pink",
+      "sezon": "Spring",
+      "category": "Toys",
+      "department": "Girls"
+    },
+    {
+      "id": "7",
+      "title": "Product 7",
+      "price": 350,
+      "stock": 150,
+      "cod_culoare": "Purple",
+      "sezon": "Summer",
+      "category": "Clothing",
+      "department": "Men"
+    },
+    {
+      "id": "1f59",
+      "title": "wa",
+      "price": 1,
+      "stock": 1,
+      "cod_culoare": "1",
+      "sezon": "Spring",
+      "category": "1",
+      "department": "1"
+    }
+  ]
+}
