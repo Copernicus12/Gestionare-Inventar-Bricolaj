@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // Import Pages
 import Dashboard from './Pages/Dashboard';
 import Inventory from './Pages/Inventory';
+import Orders from './Pages/Orders';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/inventory" element={<Inventory />} />
+              <Route path="/orders" element={<Orders />} />
             </Routes>
           </div>
         </div>

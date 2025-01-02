@@ -80,5 +80,47 @@
       "category": "1",
       "department": "1"
     }
+  ],
+  "orders": [
+    {
+      "id": "102",
+      "productId": "3",
+      "quantity": 1,
+      "status": "Delivered",
+      "orderDate": "2025-01-02",
+      "deliveryDate": "2025-01-06"
+    },
+    {
+      "id": "103",
+      "productId": "4",
+      "quantity": 3,
+      "status": "Pending",
+      "orderDate": "2025-01-03",
+      "deliveryDate": null
+    },
+    {
+      "id": "104",
+      "productId": "5",
+      "quantity": 1,
+      "status": "Shipped",
+      "orderDate": "2025-01-04",
+      "deliveryDate": "2025-01-07"
+    },
+    {
+      "id": "105",
+      "productId": "6",
+      "quantity": 5,
+      "status": "Pending",
+      "orderDate": "2025-01-05",
+      "deliveryDate": null
+    },
+    {
+      "id": "db7b",
+      "productId": "1",
+      "quantity": 123,
+      "status": "Delivered",
+      "orderDate": "2025-01-09",
+      "deliveryDate": "2025-01-31"
+    }
   ]
 }
