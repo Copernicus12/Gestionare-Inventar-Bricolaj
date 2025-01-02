@@ -1,0 +1,59 @@
+.LoginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f2f5;
+}
+
+.LoginForm {
+  background: white;
+  padding: 20px 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.LoginForm h2 {
+  color: black; /* Setează textul titlului "Login" la negru */
+  text-align: center;
+}
+
+.FormGroup {
+  margin-bottom: 20px;
+}
+
+.FormGroup label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: black; /* Textul etichetelor este negru */
+}
+
+.FormGroup input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: black; /* Textul introdus în input este negru */
+  background-color: white; /* Fundalul input-ului este alb */
+}
+
+.LoginButton {
+  width: 100%;
+  padding: 10px;
+  background-color: #1890ff;
+  color: white; /* Textul butonului rămâne alb */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.LoginButton:hover {
+  background-color: #40a9ff;
+}
+
+p {
+  color: black; /* Textul erorilor și al paragrafului este negru */
+}

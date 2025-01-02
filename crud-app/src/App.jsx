@@ -9,26 +9,39 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './Pages/Dashboard';
 import Inventory from './Pages/Inventory';
 import Orders from './Pages/Orders';
-
+import Login from './Pages/Login';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <AppHeader />
-        <div className="SideMenuAndPageContent">
-          <SideMenu />
-          <div className="PageContent">
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/inventory" element={<Inventory />} />
-              <Route path="/orders" element={<Orders />} />
-            </Routes>
+      <Router>
+          <div className="App">
+              <Routes>
+                  {/* Login Route */}
+                  <Route path="/login" element={<Login />} />
+
+                  {/* Main Routes (For authenticated users) */}
+                  <Route
+                      path="/*"
+                      element={
+                          <>
+                              <AppHeader />
+                              <div className="SideMenuAndPageContent">
+                                  <SideMenu />
+                                  <div className="PageContent">
+                                      <Routes>
+                                          <Route path="/" element={<Dashboard />} />
+                                          <Route path="/inventory" element={<Inventory />} />
+                                          <Route path="/orders" element={<Orders />} />
+                                      </Routes>
+                                  </div>
+                              </div>
+                              <AppFooter />
+                          </>
+                      }
+                  />
+              </Routes>
           </div>
-        </div>
-        <AppFooter />
-      </div>
-    </Router>
+      </Router>
   );
 }
 
