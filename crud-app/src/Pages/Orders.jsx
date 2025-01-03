@@ -5,8 +5,6 @@ function Orders() {
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
-  const [currentOrder, setCurrentOrder] = useState(null);
   const [products, setProducts] = useState([]);
 
   // Fetch products to display in the Select dropdown for the order form
@@ -34,19 +32,10 @@ function Orders() {
 
   // Show modal for adding a new order
   const showAddModal = () => {
-    setIsEdit(false);
-    setCurrentOrder(null);
     setIsModalVisible(true);
   };
 
-  // Show modal for editing an existing order
-  const showEditModal = (order) => {
-    setIsEdit(true);
-    setCurrentOrder(order);
-    setIsModalVisible(true);
-  };
-
-  // Handle form submit for adding or editing orders
+  // Handle form submit for adding orders
   const handleFormSubmit = (values) => {
     const orderData = {
       ...values,
@@ -54,41 +43,20 @@ function Orders() {
       deliveryDate: values.deliveryDate ? values.deliveryDate.format("YYYY-MM-DD") : null, // Format delivery date
     };
 
-    if (isEdit) {
-      // Update existing order (PATCH request)
-      fetch(`http://localhost:5000/orders/${currentOrder.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(orderData),
+    // Add new order (POST request)
+    fetch("http://localhost:5000/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderData),
+    })
+      .then((response) => response.json())
+      .then((newOrder) => {
+        setDataSource((prevData) => [...prevData, newOrder]);
+        setIsModalVisible(false);
       })
-        .then((response) => response.json())
-        .then((updatedOrder) => {
-          setDataSource((prevData) =>
-            prevData.map((order) =>
-              order.id === updatedOrder.id ? updatedOrder : order
-            )
-          );
-          setIsModalVisible(false);
-        })
-        .catch((error) => console.error("Error updating order:", error));
-    } else {
-      // Add new order (POST request)
-      fetch("http://localhost:5000/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(orderData),
-      })
-        .then((response) => response.json())
-        .then((newOrder) => {
-          setDataSource((prevData) => [...prevData, newOrder]);
-          setIsModalVisible(false);
-        })
-        .catch((error) => console.error("Error adding order:", error));
-    }
+      .catch((error) => console.error("Error adding order:", error));
   };
 
   // Handle cancel button in the modal
@@ -161,9 +129,6 @@ function Orders() {
             key: "action",
             render: (text, record) => (
               <div>
-                <Button type="link" onClick={() => showEditModal(record)}>
-                  Edit
-                </Button>
                 <Popconfirm
                   title="Are you sure you want to delete this order?"
                   onConfirm={() => handleDelete(record.id)}
@@ -190,18 +155,15 @@ function Orders() {
         }}
       />
 
-      {/* Modal for adding/editing order */}
+      {/* Modal for adding order */}
       <Modal
-        title={isEdit ? "Edit Order" : "Add Order"}
+        title="Add Order"
         visible={isModalVisible}
         onCancel={handleCancel}
         footer={null}
         destroyOnClose
       >
-        <Form
-          initialValues={isEdit ? currentOrder : {}}
-          onFinish={handleFormSubmit}
-        >
+        <Form onFinish={handleFormSubmit}>
           <Form.Item
             label="Product"
             name="productId"
@@ -238,14 +200,14 @@ function Orders() {
             name="orderDate"
             rules={[{ required: true, message: "Please select the order date" }]}
           >
-            <DatePicker defaultValue={isEdit ? moment(currentOrder?.orderDate) : null} format="YYYY-MM-DD" />
+            <DatePicker format="YYYY-MM-DD" />
           </Form.Item>
           <Form.Item label="Delivery Date" name="deliveryDate">
-            <DatePicker defaultValue={isEdit ? moment(currentOrder?.deliveryDate) : null} format="YYYY-MM-DD" />
+            <DatePicker format="YYYY-MM-DD" />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              {isEdit ? "Update Order" : "Add Order"}
+              Add Order
             </Button>
           </Form.Item>
         </Form>
