@@ -10,6 +10,8 @@ import Dashboard from './Pages/Dashboard';
 import Inventory from './Pages/Inventory';
 import Orders from './Pages/Orders';
 import Login from './Pages/Login';
+import Stock from './Pages/Stock';
+import RFID from './Pages/RFID';
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
                                           <Route path="/" element={<Dashboard />} />
                                           <Route path="/inventory" element={<Inventory />} />
                                           <Route path="/orders" element={<Orders />} />
+                                          <Route path="/stock" element={<Stock />} />
+                                          <Route path="/rfid" element={<RFID />} />
                                       </Routes>
                                   </div>
                               </div>

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Layout, Typography, Input } from 'antd';
+import { Layout, Typography, Input, Button } from 'antd';
 import { AreaChartOutlined } from '@ant-design/icons';
 
 const { Header } = Layout;
 
-function AppHeader() {
+function AppHeader({ isLoggedIn, onLogout }) {
   return (
     <Header className="AppHeader" style={headerStyle}>
       <div style={logoContainerStyle}>
@@ -18,6 +18,17 @@ function AppHeader() {
           enterButton
           style={{ width: '70%' }}
         />
+      </div>
+      <div style={buttonContainerStyle}>
+        {isLoggedIn ? (
+          <Button onClick={onLogout} type="primary">
+            Logout
+          </Button>
+        ) : (
+          <Button type="primary">
+            <a href="/login">Login</a>
+          </Button>
+        )}
       </div>
     </Header>
   );
@@ -56,6 +67,11 @@ const searchContainerStyle = {
   display: 'flex',
   justifyContent: 'left',
   padding: '0 40px',
+};
+
+const buttonContainerStyle = {
+  display: 'flex',
+  alignItems: 'center',
 };
 
 export default AppHeader;

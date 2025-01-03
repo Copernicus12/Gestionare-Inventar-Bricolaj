@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "json-server": "json-server --watch db.json --port 5000"
+    "json-server": "json-server --watch data_base.json --port 5000"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.2",

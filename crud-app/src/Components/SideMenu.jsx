@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Menu } from 'antd';
-import { AppstoreOutlined, ShopOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, ShopOutlined, ShoppingCartOutlined, UserOutlined, ScanOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 function SideMenu() {
@@ -32,14 +32,19 @@ function SideMenu() {
             key: '/inventory',
           },
           {
-            label: 'Orders !',
+            label: 'Orders',
             icon: <ShoppingCartOutlined />,
             key: '/orders',
           },
           {
             label: 'Stock',
             icon: <UserOutlined />,
-            key: '/customers',
+            key: '/stock',
+          },
+          {
+            label: 'RFID',
+            icon: <ScanOutlined />,
+            key: '/rfid',
           },
         ]}
       />

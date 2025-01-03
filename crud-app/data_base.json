@@ -1,0 +1,205 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "title": "Product 1",
+      "price": 100,
+      "stock": 50,
+      "cod_culoare": "Red",
+      "sezon": "Spring",
+      "category": "Clothing",
+      "department": "Men"
+    },
+    {
+      "id": "2",
+      "title": "Product 2",
+      "price": 200,
+      "stock": 30,
+      "cod_culoare": "Blue",
+      "sezon": "Summer",
+      "category": "Clothing",
+      "department": "Women"
+    },
+    {
+      "id": "3",
+      "title": "Product 3",
+      "price": 150,
+      "stock": 20,
+      "cod_culoare": "Green",
+      "sezon": "Autumn",
+      "category": "Accessories",
+      "department": "Unisex"
+    },
+    {
+      "id": "4",
+      "title": "Product 4",
+      "price": 250,
+      "stock": 10,
+      "cod_culoare": "Yellow",
+      "sezon": "Winter",
+      "category": "Electronics",
+      "department": "Kids"
+    },
+    {
+      "id": "5",
+      "title": "Product 5",
+      "price": 300,
+      "stock": 100,
+      "cod_culoare": "Black",
+      "sezon": "All Year",
+      "category": "Furniture",
+      "department": "Home"
+    },
+    {
+      "id": "6",
+      "title": "Product 6",
+      "price": 50,
+      "stock": 200,
+      "cod_culoare": "Pink",
+      "sezon": "Spring",
+      "category": "Toys",
+      "department": "Girls"
+    },
+    {
+      "id": "7",
+      "title": "Product 7",
+      "price": 350,
+      "stock": 150,
+      "cod_culoare": "Purple",
+      "sezon": "Summer",
+      "category": "Clothing",
+      "department": "Men"
+    }
+  ],
+  "orders": [
+    {
+      "id": "102",
+      "productId": "3",
+      "quantity": 1,
+      "status": "Delivered",
+      "orderDate": "2025-01-02",
+      "deliveryDate": "2025-01-06"
+    },
+    {
+      "id": "104",
+      "productId": "5",
+      "quantity": 1,
+      "status": "Shipped",
+      "orderDate": "2025-01-04",
+      "deliveryDate": "2025-01-07"
+    },
+    {
+      "id": "7959",
+      "productId": null,
+      "quantity": 10,
+      "status": "Delivered",
+      "orderDate": "2025-01-04",
+      "deliveryDate": "2025-01-09"
+    }
+  ],
+  "employees": [
+    {
+      "id": "1",
+      "name": "John Doe",
+      "position": "Manager",
+      "shift": "Morning",
+      "nextWorkDay": "2025-01-05",
+      "workSchedule": {
+        "Monday": "08:00 - 16:00",
+        "Tuesday": "08:00 - 16:00",
+        "Wednesday": "08:00 - 16:00",
+        "Thursday": "08:00 - 16:00",
+        "Friday": "08:00 - 16:00",
+        "Saturday": "Off",
+        "Sunday": "Off"
+      }
+    },
+    {
+      "id": "5",
+      "name": "Alice Smith",
+      "position": "Sales Associate",
+      "shift": "Evening",
+      "nextWorkDay": "2025-01-07",
+      "workSchedule": {
+        "Monday": "16:00 - 00:00",
+        "Tuesday": "16:00 - 00:00",
+        "Wednesday": "16:00 - 00:00",
+        "Thursday": "16:00 - 00:00",
+        "Friday": "16:00 - 00:00",
+        "Saturday": "Off",
+        "Sunday": "Off"
+      }
+    },
+    {
+      "id": "6",
+      "name": "Bob Johnson",
+      "position": "Customer Support",
+      "shift": "Morning",
+      "nextWorkDay": "2025-01-08",
+      "workSchedule": {
+        "Monday": "08:00 - 16:00",
+        "Tuesday": "08:00 - 16:00",
+        "Wednesday": "08:00 - 16:00",
+        "Thursday": "08:00 - 16:00",
+        "Friday": "08:00 - 16:00",
+        "Saturday": "Off",
+        "Sunday": "Off"
+      }
+    },
+    {
+      "id": "7",
+      "name": "Eve Williams",
+      "position": "HR Specialist",
+      "shift": "Morning",
+      "nextWorkDay": "2025-01-09",
+      "workSchedule": {
+        "Monday": "08:00 - 16:00",
+        "Tuesday": "08:00 - 16:00",
+        "Wednesday": "08:00 - 16:00",
+        "Thursday": "08:00 - 16:00",
+        "Friday": "08:00 - 16:00",
+        "Saturday": "Off",
+        "Sunday": "Off"
+      }
+    },
+    {
+      "id": "8",
+      "name": "David Brown",
+      "position": "IT Support",
+      "shift": "Night",
+      "nextWorkDay": "2025-01-10",
+      "workSchedule": {
+        "Monday": "00:00 - 08:00",
+        "Tuesday": "00:00 - 08:00",
+        "Wednesday": "00:00 - 08:00",
+        "Thursday": "00:00 - 08:00",
+        "Friday": "00:00 - 08:00",
+        "Saturday": "Off",
+        "Sunday": "Off"
+      }
+    }
+  ],
+  "rfid": [
+    {
+      "id": "rfid1",
+      "scanDate": "2025-01-01",
+      "productIds": ["1", "2"],
+      "scannedBy": "John Doe",
+      "location": "Warehouse A"
+    },
+    {
+      "id": "rfid2",
+      "scanDate": "2025-01-02",
+      "productIds": ["3", "4", "5"],
+      "scannedBy": "Alice Smith",
+      "location": "Warehouse B"
+    },
+    {
+      "id": "rfid3",
+      "scanDate": "2025-01-03",
+      "productIds": ["6", "7"],
+      "scannedBy": "Bob Johnson",
+      "location": "Warehouse A"
+    }
+  ]
+}

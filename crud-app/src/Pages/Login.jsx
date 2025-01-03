@@ -12,8 +12,8 @@ function Login() {
     e.preventDefault();
 
     // Utilizator și parolă predefinite
-    const validUser = 'admin@example.com';
-    const validPassword = 'password123';
+    const validUser = 'admin@admin.com';
+    const validPassword = 'admin';
 
     if (email === validUser && password === validPassword) {
       // Stocare simbolică pentru autentificare
