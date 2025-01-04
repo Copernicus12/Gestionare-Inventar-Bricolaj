@@ -1,105 +1,181 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Space, Typography, Popconfirm, Modal, message } from "antd";
+import {
+  Table,
+  Button,
+  Space,
+  Typography,
+  Modal,
+  message,
+  InputNumber,
+} from "antd";
 
-const API_URL_RFID = "http://localhost:5000/rfid"; // API endpoint for RFID scans
-const API_URL_PRODUCTS = "http://localhost:5000/products"; // API endpoint for products
+const API_URL_RFID = "http://localhost:5000/rfid";
+const API_URL_PRODUCTS = "http://localhost:5000/products";
 
 const RFID = () => {
-  const [rfidData, setRfidData] = useState([]); // Store RFID scan actions
-  const [productData, setProductData] = useState([]); // Store product data from last RFID scan
+  const [rfidData, setRfidData] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [lastRfidProducts, setLastRfidProducts] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [currentRfid, setCurrentRfid] = useState(null);
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [currentRfidProducts, setCurrentRfidProducts] = useState([]);
+  const [currentRfidDetails, setCurrentRfidDetails] = useState(null);
+  const [selectedProducts, setSelectedProducts] = useState({});
+  const [newRfidDetails, setNewRfidDetails] = useState({
+    scanDate: "",
+    scannedBy: "",
+    location: "",
+  });
 
-  // Fetch the latest RFID actions
   const fetchRfidData = async () => {
     try {
       const response = await fetch(API_URL_RFID);
       const data = await response.json();
       setRfidData(data);
+
+      if (data.length > 0) {
+        const lastScan = data.reduce((latest, current) =>
+          current.id > latest.id ? current : latest
+        );
+        setLastRfidProducts(lastScan.products || []);
+      }
     } catch (error) {
       message.error("Failed to fetch RFID data.");
       console.error(error);
     }
   };
 
-  // Fetch the products from the last RFID scan
-  const fetchProductData = async () => {
+  const fetchProducts = async () => {
     try {
       const response = await fetch(API_URL_PRODUCTS);
       const data = await response.json();
-      setProductData(data);
+      setProducts(data);
     } catch (error) {
-      message.error("Failed to fetch product data.");
+      message.error("Failed to fetch products.");
       console.error(error);
     }
   };
 
   useEffect(() => {
     fetchRfidData();
-    fetchProductData();
+    fetchProducts();
   }, []);
 
-  // Handle modal cancel
   const handleCancel = () => {
     setIsModalVisible(false);
   };
 
-  // Handle deleting an RFID entry (for example)
-  const handleDeleteRfid = async (id) => {
+  const handleAddCancel = () => {
+    setIsAddModalVisible(false);
+    setSelectedProducts({});
+    setNewRfidDetails({
+      scanDate: "",
+      scannedBy: "",
+      location: "",
+    });
+  };
+
+  const handleViewProducts = (record) => {
+    setCurrentRfidDetails(record);
+    setCurrentRfidProducts(record.products);
+    setIsModalVisible(true);
+  };
+
+  const handleAddRfid = () => {
+    setIsAddModalVisible(true);
+  };
+
+  const handleAddRfidSubmit = async () => {
+    const newRfidData = {
+      ...newRfidDetails,
+      products: Object.entries(selectedProducts).map(([id, { name, quantity }]) => ({
+        id,
+        name,
+        quantity,
+      })),
+    };
+
     try {
-      const response = await fetch(`${API_URL_RFID}/${id}`, {
-        method: "DELETE",
+      const response = await fetch(API_URL_RFID, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newRfidData),
       });
+
       if (response.ok) {
-        message.success("RFID entry deleted successfully");
+        message.success("RFID entry added successfully");
         fetchRfidData();
+        handleAddCancel();
       } else {
-        message.error("Failed to delete RFID entry.");
+        message.error("Failed to add RFID entry.");
       }
     } catch (error) {
-      message.error("An error occurred while deleting.");
+      message.error("An error occurred while adding RFID data.");
       console.error(error);
     }
+  };
+
+  const handleProductSelection = (productId, name, quantity) => {
+    setSelectedProducts((prevSelected) => {
+      const updatedProducts = { ...prevSelected };
+
+      if (quantity > 0) {
+        updatedProducts[productId] = { name, quantity };
+      } else {
+        delete updatedProducts[productId];
+      }
+
+      return updatedProducts;
+    });
   };
 
   return (
     <Space size={20} direction="vertical" style={{ width: "100%" }}>
       <Typography.Title level={4}>RFID Scan Management</Typography.Title>
 
-      {/* Container for both tables */}
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        {/* Table for Last RFID Scans */}
-        <div style={{ width: "48%" }}>
+        <div style={{ width: "58%" }}>
+
+        <Button
+            type="primary"
+            style={{
+              marginBottom: 16,
+              backgroundColor: "#4CAF50", // Green for success
+              borderColor: "#4CAF50",
+            }}
+            onClick={() => setIsAddModalVisible(true)}
+          >
+            Add RFID Data
+          </Button>
+
           <Table
-            title={() => "Last RFID Executed"}
+            title={() => (
+              <Space>
+                Last RFID Executed
+              </Space>
+            )}
             columns={[
               {
-                title: "RFID Scan ID",
-                dataIndex: "id",
+                title: "RFID Scan Date",
+                dataIndex: "scanDate",
               },
               {
-                title: "Executed Time",
-                dataIndex: "executedTime",
+                title: "Scanned By",
+                dataIndex: "scannedBy",
+              },
+              {
+                title: "Location",
+                dataIndex: "location",
               },
               {
                 title: "Action",
                 key: "action",
-                render: (text, record) => (
-                  <Space size="middle">
-                    <Button type="link" onClick={() => setCurrentRfid(record)}>
-                      View Products
-                    </Button>
-                    <Popconfirm
-                      title="Are you sure you want to delete this RFID scan?"
-                      onConfirm={() => handleDeleteRfid(record.id)}
-                      okText="Yes"
-                      cancelText="No"
-                    >
-                      <Button type="link" danger>
-                        Delete
-                      </Button>
-                    </Popconfirm>
-                  </Space>
+                render: (_, record) => (
+                  <Button type="link" onClick={() => handleViewProducts(record)}>
+                    View Products
+                  </Button>
                 ),
               },
             ]}
@@ -108,6 +184,7 @@ const RFID = () => {
               pageSize: 5,
             }}
             rowKey="id"
+
             style={{
               borderRadius: "16px",
               boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
@@ -117,8 +194,7 @@ const RFID = () => {
           />
         </div>
 
-        {/* Table for Products from Last RFID Scan */}
-        <div style={{ width: "48%" }}>
+        <div style={{ width: "38%" }}>
           <Table
             title={() => "Products from Last RFID Scan"}
             columns={[
@@ -135,11 +211,12 @@ const RFID = () => {
                 dataIndex: "quantity",
               },
             ]}
-            dataSource={productData}
+            dataSource={lastRfidProducts}
             pagination={{
               pageSize: 5,
             }}
             rowKey="id"
+
             style={{
               borderRadius: "16px",
               boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
@@ -150,7 +227,6 @@ const RFID = () => {
         </div>
       </div>
 
-      {/* View Products Modal */}
       <Modal
         title="Product Details from RFID Scan"
         visible={isModalVisible}
@@ -158,26 +234,102 @@ const RFID = () => {
         footer={null}
         destroyOnClose
       >
-        {currentRfid && (
-          <div>
+        {currentRfidDetails && (
+          <>
             <p>
-              <strong>RFID Scan ID:</strong> {currentRfid.id}
+              <strong>RFID Scan ID:</strong> {currentRfidDetails.id}
             </p>
             <p>
-              <strong>Executed Time:</strong> {currentRfid.executedTime}
+              <strong>Scan Date:</strong> {currentRfidDetails.scanDate}
             </p>
             <p>
-              <strong>Products Scanned:</strong>
+              <strong>Location:</strong> {currentRfidDetails.location}
+            </p>
+            <p>
+              <strong>Products:</strong>
             </p>
             <ul>
-              {currentRfid.products && currentRfid.products.map((product) => (
+              {currentRfidProducts.map((product) => (
                 <li key={product.id}>
                   <strong>{product.name}</strong> (Quantity: {product.quantity})
                 </li>
               ))}
             </ul>
-          </div>
+          </>
         )}
+      </Modal>
+
+      <Modal
+        title="Add RFID Data"
+        visible={isAddModalVisible}
+        onCancel={handleAddCancel}
+        onOk={handleAddRfidSubmit}
+      >
+        <div>
+          <div>
+            <strong>Scan Date:</strong>
+            <input
+              type="datetime-local"
+              value={newRfidDetails.scanDate}
+              onChange={(e) =>
+                setNewRfidDetails({ ...newRfidDetails, scanDate: e.target.value })
+              }
+            />
+          </div>
+          <div>
+            <strong>Scanned By:</strong>
+            <input
+              type="text"
+              value={newRfidDetails.scannedBy}
+              onChange={(e) =>
+                setNewRfidDetails({ ...newRfidDetails, scannedBy: e.target.value })
+              }
+            />
+          </div>
+          <div>
+            <strong>Location:</strong>
+            <input
+              type="text"
+              value={newRfidDetails.location}
+              onChange={(e) =>
+                setNewRfidDetails({ ...newRfidDetails, location: e.target.value })
+              }
+            />
+          </div>
+          <Table
+            title={() => "Select Products"}
+            columns={[
+              {
+                title: "Product ID",
+                dataIndex: "id",
+              },
+              {
+                title: "Product Name",
+                dataIndex: "title",
+              },
+              {
+                title: "Stock",
+                dataIndex: "stock",
+              },
+              {
+                title: "Quantity Found",
+                render: (_, record) => (
+                  <InputNumber
+                    min={0}
+                    onChange={(value) =>
+                      handleProductSelection(record.id, record.title, value)
+                    }
+                  />
+                ),
+              },
+            ]}
+            dataSource={products}
+            rowKey="id"
+            pagination={{
+              pageSize: 5,
+            }}
+          />
+        </div>
       </Modal>
     </Space>
   );
