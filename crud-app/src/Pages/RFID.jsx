@@ -27,6 +27,7 @@ const RFID = () => {
     location: "",
   });
 
+  // Fetch the RFID data
   const fetchRfidData = async () => {
     try {
       const response = await fetch(API_URL_RFID);
@@ -45,6 +46,7 @@ const RFID = () => {
     }
   };
 
+  // Fetch the products
   const fetchProducts = async () => {
     try {
       const response = await fetch(API_URL_PRODUCTS);
@@ -56,6 +58,22 @@ const RFID = () => {
     }
   };
 
+  // Extract and increment the last RFID ID
+  const generateNewRfidId = () => {
+    const lastRfid = rfidData
+      .map((item) => item.id)
+      .sort()
+      .pop(); // Get the latest (max) RFID ID
+
+    if (lastRfid) {
+      // Extract the number part from "rfidX" format
+      const lastRfidNumber = parseInt(lastRfid.replace("rfid", ""), 10);
+      return `rfid${lastRfidNumber + 1}`; // Increment the number and return the new ID
+    }
+    return "rfid1"; // If no RFID exists, start from rfid1
+  };
+
+  // Initial fetch of RFID data and products
   useEffect(() => {
     fetchRfidData();
     fetchProducts();
@@ -86,7 +104,10 @@ const RFID = () => {
   };
 
   const handleAddRfidSubmit = async () => {
+    const newRfidId = generateNewRfidId(); // Generate the new RFID ID
+
     const newRfidData = {
+      id: newRfidId, // Assign the new ID here
       ...newRfidDetails,
       products: Object.entries(selectedProducts).map(([id, { name, quantity }]) => ({
         id,
@@ -106,6 +127,7 @@ const RFID = () => {
 
       if (response.ok) {
         message.success("RFID entry added successfully");
+        // Re-fetch RFID data after successful entry
         fetchRfidData();
         handleAddCancel();
       } else {
@@ -137,8 +159,7 @@ const RFID = () => {
 
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div style={{ width: "58%" }}>
-
-        <Button
+          <Button
             type="primary"
             style={{
               marginBottom: 16,
@@ -151,11 +172,7 @@ const RFID = () => {
           </Button>
 
           <Table
-            title={() => (
-              <Space>
-                Last RFID Executed
-              </Space>
-            )}
+            title={() => <Space>Last RFID Executed</Space>}
             columns={[
               {
                 title: "RFID Scan Date",
@@ -184,7 +201,6 @@ const RFID = () => {
               pageSize: 5,
             }}
             rowKey="id"
-
             style={{
               borderRadius: "16px",
               boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
@@ -216,12 +232,12 @@ const RFID = () => {
               pageSize: 5,
             }}
             rowKey="id"
-
             style={{
               borderRadius: "16px",
               boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
               overflow: "hidden",
               backgroundColor: "#fff",
+              marginTop: "47px", // Add margin top
             }}
           />
         </div>
@@ -274,6 +290,13 @@ const RFID = () => {
               onChange={(e) =>
                 setNewRfidDetails({ ...newRfidDetails, scanDate: e.target.value })
               }
+
+              style={{
+                marginLeft: "10px", 
+                padding: "4px 8px", 
+                borderRadius: "4px", 
+              }}
+
             />
           </div>
           <div>
@@ -284,6 +307,13 @@ const RFID = () => {
               onChange={(e) =>
                 setNewRfidDetails({ ...newRfidDetails, scannedBy: e.target.value })
               }
+
+              style={{
+                marginLeft: "14px", 
+                padding: "4px 8px",
+                borderRadius: "4px", 
+              }}
+
             />
           </div>
           <div>
@@ -294,6 +324,13 @@ const RFID = () => {
               onChange={(e) =>
                 setNewRfidDetails({ ...newRfidDetails, location: e.target.value })
               }
+
+               style={{
+                marginLeft: "33px", 
+                padding: "4px 8px",
+                borderRadius: "4px", 
+              }}
+
             />
           </div>
           <Table
