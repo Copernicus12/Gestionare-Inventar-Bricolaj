@@ -4,7 +4,7 @@
       "id": "1",
       "title": "Product 1",
       "price": 100,
-      "stock": 50,
+      "stock": 100,
       "cod_culoare": "Red",
       "sezon": "Spring",
       "category": "Clothing",
@@ -72,19 +72,11 @@
     },
     {
       "id": "104",
-      "productId": null,
+      "productId": "2",
       "quantity": 1,
       "status": "Shipped",
       "orderDate": "2025-01-04",
       "deliveryDate": "2025-01-07"
-    },
-    {
-      "id": "28d8",
-      "productId": "4",
-      "quantity": 2,
-      "status": "Pending",
-      "orderDate": "2025-01-04",
-      "deliveryDate": "2025-01-09"
     },
     {
       "id": "24",
@@ -98,22 +90,6 @@
       "id": "23",
       "productId": "4",
       "quantity": 2,
-      "status": "Pending",
-      "orderDate": "2025-01-04",
-      "deliveryDate": "2025-01-09"
-    },
-    {
-      "id": "22",
-      "productId": "4",
-      "quantity": 2,
-      "status": "Pending",
-      "orderDate": "2025-01-04",
-      "deliveryDate": "2025-01-09"
-    },
-    {
-      "id": "21",
-      "productId": "4",
-      "quantity": 12,
       "status": "Pending",
       "orderDate": "2025-01-04",
       "deliveryDate": "2025-01-09"
@@ -274,6 +250,44 @@
           "id": "7",
           "name": "Product 7",
           "quantity": 15
+        }
+      ]
+    },
+    {
+      "id": "rfid4",
+      "scanDate": "2025-01-06T09:10",
+      "scannedBy": "test",
+      "location": "test",
+      "products": [
+        {
+          "id": "1",
+          "name": "Product 1",
+          "quantity": 100
+        },
+        {
+          "id": "2",
+          "name": "Product 2",
+          "quantity": 30
+        },
+        {
+          "id": "3",
+          "name": "Product 3",
+          "quantity": 1
+        },
+        {
+          "id": "4",
+          "name": "Product 4",
+          "quantity": 1
+        },
+        {
+          "id": "6",
+          "name": "Product 6",
+          "quantity": 1
+        },
+        {
+          "id": "7",
+          "name": "Product 7",
+          "quantity": 1
         }
       ]
     }

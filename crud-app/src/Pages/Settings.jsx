@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import '../CSS Style/Settings.css'; // Asigură-te că stilurile sunt corecte
 import { useNavigate } from 'react-router-dom';
 
 const Settings = () => {

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import AppHeader from './Components/AppHeader';
 import AppFooter from './Components/AppFooter';
 import SideMenu from './Components/SideMenu';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import axios from 'axios';
 
 // Import Pages
 import Dashboard from './Pages/Dashboard';
@@ -15,6 +16,18 @@ import RFID from './Pages/RFID';
 import Settings from './Pages/Settings';
 
 function App() {
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/items')
+      .then(response => {
+        setItems(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the items!', error);
+      });
+  }, []);
+
   return (
       <Router>
           <div className="App">

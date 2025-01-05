@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Space, Typography, Popconfirm, Modal, Form, Input, message } from "antd";
 
-const API_URL = "http://localhost:5000/employees"; // Replace with your API endpoint
+const API_URL = "http://localhost:1234/api/data/employees"; // Asigură-te că este corect
 
 const Stock = () => {
   const [employees, setEmployees] = useState([]);
@@ -76,19 +76,21 @@ const Stock = () => {
           Sunday: "Off",
         },
       };
-
+  
       if (isEdit) {
         // Update employee
-        const response = await fetch(`${API_URL}/${currentEmployee.id}`, {
+        const response = await fetch(`${API_URL}/${currentEmployee._id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(employeeData),
         });
+  
         if (response.ok) {
           message.success("Employee updated successfully");
           fetchEmployees();
         } else {
-          message.error("Failed to update employee.");
+          const error = await response.json();
+          message.error(`Failed to update employee: ${error.message}`);
         }
       } else {
         // Add new employee
@@ -123,17 +125,21 @@ const Stock = () => {
       const response = await fetch(`${API_URL}/${id}`, {
         method: "DELETE",
       });
+  
       if (response.ok) {
         message.success("Employee deleted successfully");
-        fetchEmployees();
+        fetchEmployees();  // Refetch data after deletion
       } else {
-        message.error("Failed to delete employee.");
+        const error = await response.json();
+        message.error(`Failed to delete employee: ${error.message}`);
       }
     } catch (error) {
       message.error("An error occurred while deleting.");
-      console.error(error);
+      console.error("Error:", error);
     }
   };
+  
+  
 
   return (
     <Space size={20} direction="vertical" style={{ width: "100%" }}>
@@ -168,7 +174,7 @@ const Stock = () => {
                 </Button>
                 <Popconfirm
                   title="Are you sure you want to delete this employee?"
-                  onConfirm={() => handleDelete(record.id)}
+                  onConfirm={() => handleDelete(record._id)}
                   okText="Yes"
                   cancelText="No"
                 >
@@ -184,7 +190,7 @@ const Stock = () => {
         pagination={{
           pageSize: 5,
         }}
-        rowKey="id"
+        rowKey="_id"
         style={{
           borderRadius: "16px",
           boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",

@@ -52,7 +52,7 @@ function SideMenu() {
             icon: <SettingOutlined />,
             key: '/settings',
             style: { position: 'absolute', bottom: 45, width: '6.3%' }, // Make it stick to the bottom
-          },
+          }
         ]}
       />
     </div>
