@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Menu } from 'antd';
-import { AppstoreOutlined, ShopOutlined, ShoppingCartOutlined, UserOutlined, ScanOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, ShopOutlined, ShoppingCartOutlined, UserOutlined, ScanOutlined, SettingOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 function SideMenu() {
@@ -45,6 +45,13 @@ function SideMenu() {
             label: 'RFID',
             icon: <ScanOutlined />,
             key: '/rfid',
+          },
+          // Add the Settings section here
+          {
+            label: 'Settings',
+            icon: <SettingOutlined />,
+            key: '/settings',
+            style: { position: 'absolute', bottom: 45, width: '6.3%' }, // Make it stick to the bottom
           },
         ]}
       />

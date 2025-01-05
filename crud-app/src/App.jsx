@@ -12,6 +12,7 @@ import Orders from './Pages/Orders';
 import Login from './Pages/Login';
 import Stock from './Pages/Stock';
 import RFID from './Pages/RFID';
+import Settings from './Pages/Settings';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
                                           <Route path="/orders" element={<Orders />} />
                                           <Route path="/stock" element={<Stock />} />
                                           <Route path="/rfid" element={<RFID />} />
+                                          <Route path="/settings" element={<Settings />} />
                                       </Routes>
                                   </div>
                               </div>

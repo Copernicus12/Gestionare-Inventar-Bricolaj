@@ -209,6 +209,22 @@
         "Saturday": "Off",
         "Sunday": "Off"
       }
+    },
+    {
+      "id": "b244",
+      "name": "test",
+      "position": "Manager",
+      "shift": "Diminiata",
+      "nextWorkDay": "2025-01-06",
+      "workSchedule": {
+        "Monday": "00:00 - 08:00",
+        "Tuesday": "00:00 - 08:00",
+        "Wednesday": "00:00 - 08:00",
+        "Thursday": "00:00 - 08:00",
+        "Friday": "00:00 - 08:00",
+        "Saturday": "Off",
+        "Sunday": "Off"
+      }
     }
   ],
   "rfid": [
