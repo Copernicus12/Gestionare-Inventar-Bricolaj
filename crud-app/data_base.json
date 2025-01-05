@@ -41,16 +41,6 @@
       "department": "Kids"
     },
     {
-      "id": "5",
-      "title": "Product 5",
-      "price": 300,
-      "stock": 100,
-      "cod_culoare": "Black",
-      "sezon": "All Year",
-      "category": "Furniture",
-      "department": "Home"
-    },
-    {
       "id": "6",
       "title": "Product 6",
       "price": 50,
@@ -82,7 +72,7 @@
     },
     {
       "id": "104",
-      "productId": "5",
+      "productId": null,
       "quantity": 1,
       "status": "Shipped",
       "orderDate": "2025-01-04",

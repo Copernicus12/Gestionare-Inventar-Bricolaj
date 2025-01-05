@@ -58,13 +58,19 @@ function Inventory() {
         })
         .catch((error) => console.error("Error updating product:", error));
     } else {
+      // Generate new product ID based on the highest existing ID
+      const newId = Math.max(...dataSource.map((product) => product.id), 0) + 1;
+
+      // Convert the ID to string
+      const newProduct = { ...values, id: newId.toString() };
+
       // Add new product (POST request)
       fetch("http://localhost:5000/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify(newProduct), // Send with new generated id as string
       })
         .then((response) => response.json())
         .then((newProduct) => {
@@ -85,11 +91,17 @@ function Inventory() {
     fetch(`http://localhost:5000/products/${id}`, {
       method: "DELETE",
     })
-      .then(() => {
-        // Update the dataSource in the UI to reflect the removal
-        setDataSource((prevData) => prevData.filter((product) => product.id !== id));
+      .then((response) => {
+        if (response.ok) {
+          // Update the dataSource in the UI to reflect the removal
+          setDataSource((prevData) => prevData.filter((product) => product.id !== id));
+        } else {
+          console.error("Error deleting product:", response.statusText);
+        }
       })
-      .catch((error) => console.error("Error deleting product:", error));
+      .catch((error) => {
+        console.error("Error deleting product:", error);
+      });
   };
 
   return (
@@ -157,7 +169,7 @@ function Inventory() {
         ]}
         dataSource={dataSource}
         pagination={{
-          pageSize: 5, // Set maximum items per page to 6
+          pageSize: 5, // Set maximum items per page to 5
         }}
         style={{
           borderRadius: "16px",
