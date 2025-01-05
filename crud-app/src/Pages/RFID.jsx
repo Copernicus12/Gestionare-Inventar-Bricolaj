@@ -9,8 +9,7 @@ import {
   InputNumber,
 } from "antd";
 
-const API_URL_RFID = "http://localhost:5000/rfid";
-const API_URL_PRODUCTS = "http://localhost:5000/products";
+const API_URL_RFID = "http://localhost:1234/api/data/rfid"; 
 
 const RFID = () => {
   const [rfidData, setRfidData] = useState([]);
@@ -104,10 +103,9 @@ const RFID = () => {
   };
 
   const handleAddRfidSubmit = async () => {
-    const newRfidId = generateNewRfidId(); // Generate the new RFID ID
-
+    const newRfidId = generateNewRfidId(); // Generate a new RFID ID
     const newRfidData = {
-      id: newRfidId, // Assign the new ID here
+      id: newRfidId,  // New ID for the RFID entry
       ...newRfidDetails,
       products: Object.entries(selectedProducts).map(([id, { name, quantity }]) => ({
         id,
@@ -115,7 +113,7 @@ const RFID = () => {
         quantity,
       })),
     };
-
+  
     try {
       const response = await fetch(API_URL_RFID, {
         method: "POST",
@@ -124,11 +122,10 @@ const RFID = () => {
         },
         body: JSON.stringify(newRfidData),
       });
-
+  
       if (response.ok) {
         message.success("RFID entry added successfully");
-        // Re-fetch RFID data after successful entry
-        fetchRfidData();
+        fetchRfidData(); // Refresh the list of RFID data after adding a new entry
         handleAddCancel();
       } else {
         message.error("Failed to add RFID entry.");

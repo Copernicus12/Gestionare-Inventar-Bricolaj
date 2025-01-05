@@ -5,6 +5,8 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const app = express();
 const port = 1234;
 
+const { ObjectId } = require('mongodb'); // Import ObjectId
+
 app.use(cors());
 app.use(express.json()); // For parsing application/json
 
@@ -53,7 +55,7 @@ app.post('/api/data/employees', async (req, res) => {
   }
 });
 
-
+// Update all employees
 app.put('/api/data/employees/:id', async (req, res) => {
   try {
     const { id } = req.params;  // The ID of the employee to update
@@ -85,8 +87,7 @@ app.put('/api/data/employees/:id', async (req, res) => {
 
   
 
-  const { ObjectId } = require('mongodb'); // Import ObjectId
-
+// Detele all employees
   app.delete('/api/data/employees/:id', async (req, res) => {
     try {
       const { id } = req.params;  // The ID from the URL
@@ -112,7 +113,79 @@ app.put('/api/data/employees/:id', async (req, res) => {
     }
   });
   
+  // Fetch all RFID entries
+app.get('/api/data/rfid', async (req, res) => {
+    try {
+      const db = client.db('inventar');
+      const collection = db.collection('rfid');
+      const data = await collection.find({}).limit(10).toArray(); // Limit to 10 RFID entries
+      res.json(data);
+    } catch (err) {
+      res.status(500).json({ message: 'Failed to fetch RFID data', error: err.message });
+    }
+  });
+  
+  // Add new RFID entry
+  app.post('/api/data/rfid', async (req, res) => {
+    try {
+      const newRfidData = req.body; // New RFID entry data from frontend
+      const db = client.db('inventar');
+      const collection = db.collection('rfid');
+      const result = await collection.insertOne(newRfidData);
+      res.status(201).json({ message: 'RFID data added successfully', id: result.insertedId });
+    } catch (err) {
+      res.status(500).json({ message: 'Failed to add RFID data', error: err.message });
+    }
+  });
 
+  // Update RFID entry
+app.put('/api/data/rfid/:id', async (req, res) => {
+    try {
+      const { id } = req.params;  // The ID of the RFID to update
+      const updatedRfidData = req.body; // The updated RFID data from the frontend
+  
+      const objectId = new ObjectId(id); // Convert id to ObjectId
+  
+      const db = client.db('inventar');
+      const collection = db.collection('rfid');
+  
+      const result = await collection.updateOne(
+        { _id: objectId },
+        { $set: updatedRfidData } // Update the fields
+      );
+  
+      if (result.matchedCount === 0) {
+        return res.status(404).json({ message: 'RFID entry not found' });
+      }
+  
+      res.json({ message: 'RFID entry updated successfully' });
+    } catch (error) {
+      console.error('Error during RFID update:', error);
+      res.status(500).json({ message: 'Failed to update RFID entry', error: error.message });
+    }
+  });
+
+  // Delete RFID entry
+app.delete('/api/data/rfid/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      const objectId = new ObjectId(id);
+  
+      const db = client.db('inventar');
+      const collection = db.collection('rfid');
+  
+      const result = await collection.deleteOne({ _id: objectId });
+  
+      if (result.deletedCount === 0) {
+        return res.status(404).json({ message: 'RFID entry not found' });
+      }
+  
+      res.json({ message: 'RFID entry deleted successfully' });
+    } catch (error) {
+      console.error('Error while deleting RFID entry:', error);
+      res.status(500).json({ message: 'Failed to delete RFID entry', error: error.message });
+    }
+  });
   
 
 // Start the server
