@@ -187,6 +187,110 @@ app.delete('/api/data/rfid/:id', async (req, res) => {
     }
   });
   
+  // Fetch all products
+app.get('/api/data/products', async (req, res) => {
+  try {
+    const db = client.db('inventar');
+    const collection = db.collection('products');
+    const data = await collection.find({}).limit(10).toArray(); // Limit to 10 products
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch products', error: err.message });
+  }
+});
+
+// Add a new product
+app.post('/api/data/products', async (req, res) => {
+    try {
+      const db = client.db('inventar');
+      const collection = db.collection('products');
+  
+      // Găsește ultimul produs și extrage ID-ul său
+      const lastProduct = await collection.find().sort({ _id: -1 }).limit(1).toArray();
+      let newId = 1; // ID-ul va începe de la 1, dacă nu există produse.
+  
+      if (lastProduct.length > 0) {
+        // Dacă există produse, ia ID-ul ultimului produs și crește-l cu 1
+        newId = lastProduct[0].id + 1;
+      }
+  
+      // Creează un obiect nou cu ID-ul incrementat
+      const newProduct = {
+        id: newId, // Folosește ID-ul incremental
+        name: req.body.name,
+        price: req.body.price,
+        description: req.body.description,
+      };
+  
+      // Adaugă produsul în baza de date
+      const result = await collection.insertOne(newProduct);
+  
+      // Răspuns de succes
+      res.status(201).json(result.ops[0]);
+  
+    } catch (error) {
+      console.error('Error while creating product:', error);
+      res.status(500).json({ message: 'Failed to create product', error: error.message });
+    }
+  });
+  
+
+// Update product
+app.put('/api/data/products/:id', async (req, res) => {
+  try {
+    const { id } = req.params;  // The ID of the product to update
+    const updatedProduct = req.body; // The updated product data from the frontend
+
+    // Ensure the id is correctly converted to ObjectId
+    const objectId = new ObjectId(id);
+
+    const db = client.db('inventar');
+    const collection = db.collection('products');
+
+    // Perform the update operation
+    const result = await collection.updateOne(
+      { _id: objectId }, // Find product by _id
+      { $set: updatedProduct } // Update the fields
+    );
+
+    // If no document was found or updated
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.json({ message: 'Product updated successfully' });
+  } catch (error) {
+    console.error('Error during update:', error);  // Log the error
+    res.status(500).json({ message: 'Failed to update product', error: error.message });
+  }
+});
+
+// Delete product
+app.delete('/api/data/products/:id', async (req, res) => {
+  try {
+    const { id } = req.params;  // The ID from the URL
+
+    // Ensure the id is correctly converted to ObjectId
+    const objectId = new ObjectId(id);
+
+    const db = client.db('inventar');
+    const collection = db.collection('products');
+
+    // Perform delete operation
+    const result = await collection.deleteOne({ _id: objectId });
+
+    // Check if any document was deleted
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.json({ message: 'Product deleted successfully' });
+  } catch (error) {
+    console.error('Error while deleting product:', error); // Log the error for debugging
+    res.status(500).json({ message: 'Failed to delete product', error: error.message });
+  }
+});
+
 
 // Start the server
 app.listen(port, () => {
