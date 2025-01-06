@@ -7,11 +7,11 @@ import {
   Modal,
   message,
   InputNumber,
+  Progress,
 } from "antd";
 
 const API_URL_RFID = "http://localhost:1234/api/data/rfid"; 
 const API_URL_PRODUCTS = "http://localhost:1234/api/data/products";
-
 
 const RFID = () => {
   const [rfidData, setRfidData] = useState([]);
@@ -72,6 +72,16 @@ const RFID = () => {
       return `rfid${lastRfidNumber + 1}`; // Increment the number and return the new ID
     }
     return "rfid1"; // If no RFID exists, start from rfid1
+  };
+
+  // Calculate the total scanned products and total products
+  const calculateProgress = () => {
+    const totalScanned = lastRfidProducts.reduce((sum, product) => sum + product.quantity, 0);
+    const totalAvailable = products.reduce((sum, product) => sum + product.stock, 0);
+
+    if (totalAvailable === 0) return 0;
+
+    return Math.min((totalScanned / totalAvailable) * 100, 100);
   };
 
   // Initial fetch of RFID data and products
@@ -153,11 +163,11 @@ const RFID = () => {
   };
 
   return (
-    <Space size={20} direction="vertical" style={{ width: "100%" }}>
+    <Space size={20} direction="vertical" style={{ width: "130%" }}>
       <Typography.Title level={4}>RFID Scan Management</Typography.Title>
 
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div style={{ width: "58%" }}>
+        <div style={{ width: "58%" ,marginTop: "20px"}}>
           <Button
             type="primary"
             style={{
@@ -209,7 +219,7 @@ const RFID = () => {
           />
         </div>
 
-        <div style={{ width: "38%" }}>
+        <div style={{ width: "38%", marginLeft: "40px", marginTop: "20px" }}>
           <Table
             title={() => "Products from Last RFID Scan"}
             columns={[
@@ -240,6 +250,19 @@ const RFID = () => {
             }}
           />
         </div>
+
+        <div style={{ width: "38%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+  <Typography.Text style={{ marginBottom: "10px" }}>
+    Progress for the Last RFID Scan
+  </Typography.Text>
+  <Progress
+    type="circle"
+    percent={calculateProgress()}
+    width={120}
+    format={(percent) => `${Math.round(percent)}%`}
+    strokeColor="#4CAF50"
+  />
+</div>
       </div>
 
       <Modal
@@ -289,13 +312,11 @@ const RFID = () => {
               onChange={(e) =>
                 setNewRfidDetails({ ...newRfidDetails, scanDate: e.target.value })
               }
-
               style={{
                 marginLeft: "10px", 
                 padding: "4px 8px", 
                 borderRadius: "4px", 
               }}
-
             />
           </div>
           <div>
@@ -306,13 +327,11 @@ const RFID = () => {
               onChange={(e) =>
                 setNewRfidDetails({ ...newRfidDetails, scannedBy: e.target.value })
               }
-
               style={{
                 marginLeft: "14px", 
                 padding: "4px 8px",
                 borderRadius: "4px", 
               }}
-
             />
           </div>
           <div>
@@ -323,13 +342,11 @@ const RFID = () => {
               onChange={(e) =>
                 setNewRfidDetails({ ...newRfidDetails, location: e.target.value })
               }
-
                style={{
                 marginLeft: "33px", 
                 padding: "4px 8px",
                 borderRadius: "4px", 
               }}
-
             />
           </div>
           <Table
