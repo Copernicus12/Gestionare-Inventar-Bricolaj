@@ -233,7 +233,12 @@ app.put('/api/data/products/:id', async (req, res) => {
     const { id } = req.params;  // The ID of the product to update
     const updatedProduct = req.body; // The updated product data from the frontend
 
-    // Ensure the id is correctly converted to ObjectId
+    // Validate the ID before converting to ObjectId
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid product ID format' });
+    }
+
+    // Convert id to ObjectId
     const objectId = new ObjectId(id);
 
     const db = client.db('inventar');
@@ -256,6 +261,7 @@ app.put('/api/data/products/:id', async (req, res) => {
     res.status(500).json({ message: 'Failed to update product', error: error.message });
   }
 });
+
 
 // Delete product
 app.delete('/api/data/products/:id', async (req, res) => {

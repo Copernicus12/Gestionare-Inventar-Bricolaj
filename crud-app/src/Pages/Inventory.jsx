@@ -39,7 +39,7 @@ function Inventory() {
   const handleFormSubmit = (values) => {
     if (isEdit) {
       // Update product (PUT request)
-      fetch(`http://localhost:1234/api/data/products/${currentProduct.id}`, {
+      fetch(`http://localhost:1234/api/data/products/${currentProduct._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -48,19 +48,16 @@ function Inventory() {
       })
         .then((response) => response.json())
         .then(() => {
-          // Reîncarcă lista de produse pentru a reflecta schimbările
+          // Reload the product list to reflect changes
           fetchProducts();
           setIsModalVisible(false);
         })
         .catch((error) => console.error("Error updating product:", error));
     } else {
-      // Generăm un ID pentru produsul nou
-      const newId = (Math.max(...dataSource.map((product) => parseInt(product.id))) + 1).toString(); // Calculează ID-ul automat
-  
-      // Adăugăm ID-ul la valorile trimise
+      // Add new product (POST request)
+      const newId = (Math.max(...dataSource.map((product) => parseInt(product.id))) + 1).toString(); // Calculate new ID
       const newProduct = { ...values, id: newId };
   
-      // Add new product (POST request)
       fetch("http://localhost:1234/api/data/products", {
         method: "POST",
         headers: {
@@ -70,14 +67,12 @@ function Inventory() {
       })
         .then((response) => response.json())
         .then(() => {
-          // Reîncarcă lista de produse pentru a reflecta schimbările
-          fetchProducts();
+          fetchProducts(); // Reload product list
           setIsModalVisible(false);
         })
         .catch((error) => console.error("Error adding product:", error));
     }
   };
-  
   
   // Handle modal cancel
   const handleCancel = () => {
@@ -122,7 +117,6 @@ const fetchProducts = () => {
       setLoading(false);
     });
 };
-
 
   return (
     <Space size={20} direction="vertical" style={{ width: "100%" }}>
