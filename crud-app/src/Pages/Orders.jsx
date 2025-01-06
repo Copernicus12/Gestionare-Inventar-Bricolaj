@@ -9,7 +9,7 @@ function Orders() {
 
   // Fetch products to display in the Select dropdown for the order form
   useEffect(() => {
-    fetch("http://localhost:5000/products")
+    fetch("http://localhost:1234/api/data/products")
       .then((response) => response.json())
       .then((data) => setProducts(data))
       .catch((error) => console.error("Error fetching products:", error));
@@ -18,7 +18,7 @@ function Orders() {
   // Fetch orders data
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:5000/orders")
+    fetch("http://localhost:1234/api/data/orders")
       .then((response) => response.json())
       .then((data) => {
         setDataSource(data);
@@ -44,7 +44,7 @@ function Orders() {
     };
 
     // Add new order (POST request)
-    fetch("http://localhost:5000/orders", {
+    fetch("http://localhost:1234/api/data/orders", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -66,7 +66,7 @@ function Orders() {
 
   // Handle delete order
   const handleDelete = (id) => {
-    fetch(`http://localhost:5000/orders/${id}`, {
+    fetch(`http://localhost:1234/api/data/orders/${id}`, {
       method: "DELETE",
     })
       .then(() => {

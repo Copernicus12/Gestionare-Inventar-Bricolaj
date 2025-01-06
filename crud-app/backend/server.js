@@ -219,9 +219,6 @@ app.post('/api/data/products', async (req, res) => {
     // Determină id-ul nou
     const newId = lastProduct.length > 0 ? (parseInt(lastProduct[0].id) + 1).toString() : '1';
 
-    // Logare id-ul nou calculat
-    console.log("Noul ID pentru produs: ", newId);
-
     // Crează un nou produs cu id-ul calculat
     const newProduct = {
       ...req.body,
@@ -301,6 +298,108 @@ app.delete('/api/data/products/:id', async (req, res) => {
     res.status(500).json({ message: 'Failed to delete product', error: error.message });
   }
 });
+
+// Fetch all orders
+app.get('/api/data/orders', async (req, res) => {
+  try {
+    const db = client.db('inventar');
+    const collection = db.collection('orders');
+    
+    // Filtrăm comenzile pentru a exclude cele marcate ca șterse
+    const data = await collection.find({ deleted: { $ne: true } }).limit(10).toArray();
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch orders', error: err.message });
+  }
+});
+
+
+// Add a new order
+app.post('/api/data/orders', async (req, res) => {
+  try {
+    // Găsește ultima comandă din colecția 'orders' în baza de date
+    const lastOrder = await client.db('inventar').collection('orders').find().sort({ id: -1 }).limit(1).toArray();
+
+    // Determină id-ul nou pe baza celui precedent
+    const newId = lastOrder.length > 0 ? (parseInt(lastOrder[0].id) + 1).toString() : '1';
+
+    // Crează o nouă comandă cu id-ul calculat
+    const newOrder = {
+      ...req.body,
+      id: newId,  // Atribuim id-ul calculat
+    };
+
+    // Salvează comanda în baza de date
+    const db = client.db('inventar');
+    const collection = db.collection('orders');
+    const result = await collection.insertOne(newOrder);
+
+    res.status(201).json({ message: 'Order added successfully', id: result.insertedId, order: newOrder });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to add order', error: err.message });
+  }
+});
+
+
+// Update an existing order
+app.put('/api/data/orders/:id', async (req, res) => {
+  try {
+    const { id } = req.params;  // ID-ul comenzii care urmează să fie actualizată
+    const updatedOrder = req.body; // Datele actualizate ale comenzii trimise de frontend
+
+    // Convertirea ID-ului la ObjectId
+    const objectId = new ObjectId(id);
+
+    const db = client.db('inventar');
+    const collection = db.collection('orders');
+
+    // Efectuarea actualizării
+    const result = await collection.updateOne(
+      { $set: updatedOrder } // Actualizează câmpurile
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    res.json({ message: 'Order updated successfully' });
+  } catch (error) {
+    console.error('Error during order update:', error);
+    res.status(500).json({ message: 'Failed to update order', error: error.message });
+  }
+});
+
+app.delete('/api/data/orders/:id', async (req, res) => {
+  try {
+    const { id } = req.params;  // ID-ul comenzii de șters (folosit ca parametru în URL)
+
+    // Verifică dacă ID-ul este valid
+    if (!id) {
+      return res.status(400).json({ message: 'Invalid order ID format' });
+    }
+
+    const db = client.db('inventar');
+    const collection = db.collection('orders');
+
+    // Schimbă starea comenzii pentru a o marca drept ștearsă, folosind câmpul 'id'
+    const result = await collection.updateOne(
+      { id: id },  // Căutăm comanda după câmpul personalizat 'id'
+      { $set: { deleted: true } }  // Marcăm comanda ca ștearsă, fără a o elimina din bază
+    );
+
+    // Dacă nu s-au găsit comenzi care să corespundă ID-ului, returnăm eroare
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    res.json({ message: 'Order marked as deleted successfully' });
+  } catch (error) {
+    console.error('Error while deleting order:', error);
+    res.status(500).json({ message: 'Failed to delete order', error: error.message });
+  }
+});
+
+
 
 // Start the server
 app.listen(port, () => {
