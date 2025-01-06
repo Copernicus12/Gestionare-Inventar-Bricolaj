@@ -20,7 +20,7 @@ function Dashboard() {
   // Fetch orders from the API
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:5000/orders")
+    fetch("http://localhost:1234/api/data/orders")
       .then((response) => response.json())
       .then((data) => {
         const shippedAndPendingOrders = data.filter(order => 
@@ -38,7 +38,7 @@ function Dashboard() {
 
   // Fetch products from the API to calculate total inventory products and stock value
   useEffect(() => {
-    fetch("http://localhost:5000/products")
+    fetch("http://localhost:1234/api/data/products")
       .then((response) => response.json())
       .then((data) => {
         const totalInventory = data.reduce((acc, product) => {
@@ -74,7 +74,7 @@ function Dashboard() {
 
   // Fetch employees and calculate number of managers
   useEffect(() => {
-    fetch("http://localhost:5000/employees")
+    fetch("http://localhost:1234/api/data/employees")
       .then((response) => response.json())
       .then((data) => {
         const managerCount = data.filter(employee => employee.position === "Manager").length;
