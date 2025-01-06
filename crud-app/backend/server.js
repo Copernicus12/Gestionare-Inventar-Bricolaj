@@ -210,22 +210,35 @@ app.get('/api/data/products', async (req, res) => {
   }
 });
 
-// Add a new product
+// Add new product
 app.post('/api/data/products', async (req, res) => {
-  const { title, price, stock, cod_culoare, sezon, category, department } = req.body;
-
-  if (!title || !price || !stock || !cod_culoare || !sezon || !category || !department) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
-
   try {
-    const product = await saveProduct({ title, price, stock, cod_culoare, sezon, category, department });
-    res.status(201).json(product); // Send the created product as a response
+    // Găsește ultimul produs din tabelul 'products' în baza de date
+    const lastProduct = await client.db('inventar').collection('products').find().sort({ id: -1 }).limit(1).toArray();
+    
+    // Determină id-ul nou
+    const newId = lastProduct.length > 0 ? (parseInt(lastProduct[0].id) + 1).toString() : '1';
+
+    // Logare id-ul nou calculat
+    console.log("Noul ID pentru produs: ", newId);
+
+    // Crează un nou produs cu id-ul calculat
+    const newProduct = {
+      ...req.body,
+      id: newId,  // Atribuim id-ul calculat
+    };
+
+    // Salvează produsul în baza de date
+    await client.db('inventar').collection('products').insertOne(newProduct);
+
+    // Returnează răspunsul cu produsul salvat
+    res.status(201).json(newProduct);
   } catch (error) {
-    console.error('Error creating product:', error);
-    res.status(500).json({ error: 'Failed to create product' });
+    console.error("Error adding product:", error);
+    res.status(500).send("Error adding product");
   }
 });
+
 
 // Update product
 app.put('/api/data/products/:id', async (req, res) => {
