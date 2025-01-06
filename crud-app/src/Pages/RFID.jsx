@@ -10,6 +10,8 @@ import {
 } from "antd";
 
 const API_URL_RFID = "http://localhost:1234/api/data/rfid"; 
+const API_URL_PRODUCTS = "http://localhost:1234/api/data/products";
+
 
 const RFID = () => {
   const [rfidData, setRfidData] = useState([]);
