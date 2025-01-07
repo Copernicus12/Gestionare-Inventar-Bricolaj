@@ -196,9 +196,9 @@ const RFID = () => {
                 dataIndex: "location",
               },
               {
-                title: "Action",
+                title: <div style={{ textAlign: 'center' }}>Action</div>,
                 key: "action",
-                render: (_, record) => (
+                render: (text, record) => (
                   <Button type="link" onClick={() => handleViewProducts(record)}>
                     View Products
                   </Button>

@@ -160,7 +160,7 @@ const Stock = () => {
             dataIndex: "shift",
           },
           {
-            title: "Action",
+            title: <div style={{ textAlign: 'center' }}>Action</div>,
             key: "action",
             render: (text, record) => (
               <Space size="middle">
