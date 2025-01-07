@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Space, Typography, Statistic, Table } from 'antd';
 import { TruckFilled, DropboxOutlined, UserOutlined, EuroOutlined } from '@ant-design/icons';
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, Title, Tooltip, Legend, LineElement, PointElement, Filler } from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, Title, Tooltip, Legend, LineElement, PointElement, Filler);
 
 // Dashboard Component
 function Dashboard() {
   const [incomingProducts, setIncomingProducts] = useState(0);
-  const [inventoryProducts, setInventoryProducts] = useState(0); // New state for total inventory products
+  const [inventoryProducts, setInventoryProducts] = useState(0); 
   const [loading, setLoading] = useState(true);
-  const [stockManagers, setStockManagers] = useState(0); // New state for number of stock managers
-  const [stockValue, setStockValue] = useState(0); // New state for stock value
-  const [products, setProducts] = useState([]); // New state for product list
+  const [stockManagers, setStockManagers] = useState(0); 
+  const [stockValue, setStockValue] = useState(0); 
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]); 
 
-  const exchangeRate = 4.9; // 1 Euro = 4.9 Lei (cursul de schimb)
+  const exchangeRate = 4.9; // 1 Euro = 4.9 Lei
 
   // Fetch orders from the API
   useEffect(() => {
@@ -23,11 +24,16 @@ function Dashboard() {
     fetch("http://localhost:1234/api/data/orders")
       .then((response) => response.json())
       .then((data) => {
-        const shippedAndPendingOrders = data.filter(order => 
-          order.status === 'Shipped' || order.status === 'Pending'
-        );
-        const totalIncoming = shippedAndPendingOrders.reduce((acc, order) => acc + order.quantity, 0);
-        setIncomingProducts(totalIncoming); // Update incoming products state
+        // Filter orders to include only those with a delivery date >= today
+        const today = new Date().toISOString().split('T')[0]; // Get today's date in 'YYYY-MM-DD' format
+        const futureOrders = data.filter(order => order.deliveryDate >= today);
+
+        // Sort orders by delivery date in ascending order
+        const sortedOrders = futureOrders.sort((a, b) => new Date(a.deliveryDate) - new Date(b.deliveryDate));
+
+        const totalIncoming = sortedOrders.reduce((acc, order) => acc + order.quantity, 0);
+        setIncomingProducts(totalIncoming); 
+        setOrders(sortedOrders); 
         setLoading(false);
       })
       .catch((error) => {
@@ -36,14 +42,14 @@ function Dashboard() {
       });
   }, []);
 
-  // Fetch products from the API to calculate total inventory products and stock value
+  // Fetch products from the API
   useEffect(() => {
     fetch("http://localhost:1234/api/data/products")
       .then((response) => response.json())
       .then((data) => {
         const totalInventory = data.reduce((acc, product) => {
           if (typeof product.stock === 'number') {
-            acc += product.stock; // Ensure stock is a valid number
+            acc += product.stock;
           } else {
             console.warn(`Invalid stock for product ${product.title}`);
           }
@@ -52,23 +58,23 @@ function Dashboard() {
 
         const totalValueInLei = data.reduce((acc, product) => {
           if (typeof product.stock === 'number' && typeof product.price === 'number') {
-            acc += product.stock * product.price; // Use price instead of discountedPrice
+            acc += product.stock * product.price;
           } else {
             console.warn(`Invalid stock or price for product ${product.title}`);
           }
           return acc;
         }, 0);
 
-        const totalValueInEuro = totalValueInLei / exchangeRate; // Convert value from Lei to Euro
+        const totalValueInEuro = totalValueInLei / exchangeRate;
 
-        setInventoryProducts(totalInventory); // Update total inventory products
-        setStockValue(totalValueInEuro); // Update total stock value in Euro
-        setProducts(data); // Save all products to state for the table
+        setInventoryProducts(totalInventory); 
+        setStockValue(totalValueInEuro); 
+        setProducts(data); 
       })
       .catch((error) => {
         console.error("Error fetching products:", error);
-        setInventoryProducts(0); // Set inventory to 0 in case of error
-        setStockValue(0); // Set stock value to 0 in case of error
+        setInventoryProducts(0); 
+        setStockValue(0); 
       });
   }, []);
 
@@ -78,13 +84,34 @@ function Dashboard() {
       .then((response) => response.json())
       .then((data) => {
         const managerCount = data.filter(employee => employee.position === "Manager").length;
-        setStockManagers(managerCount); // Set the count of managers
+        setStockManagers(managerCount); 
       })
       .catch((error) => {
         console.error("Error fetching employees:", error);
-        setStockManagers(0); // If an error occurs, set managers count to 0
+        setStockManagers(0); 
       });
   }, []);
+
+  // Prepare data for the future delivery chart
+  const prepareDeliveryData = () => {
+    const futureDeliveries = {};
+
+    orders.forEach(order => {
+      const deliveryDate = new Date(order.deliveryDate);
+      const dateString = deliveryDate.toISOString().split('T')[0]; // Get the date in 'YYYY-MM-DD' format
+      if (!futureDeliveries[dateString]) {
+        futureDeliveries[dateString] = 0;
+      }
+      futureDeliveries[dateString] += order.quantity;
+    });
+
+    const labels = Object.keys(futureDeliveries); // Extract dates
+    const data = Object.values(futureDeliveries); // Extract corresponding quantities
+
+    return { labels, data };
+  };
+
+  const { labels, data } = prepareDeliveryData();
 
   // Sorting products by stock in descending order
   const sortedProducts = products.sort((a, b) => b.id - a.id);
@@ -122,12 +149,12 @@ function Dashboard() {
           <DashboardCard 
             icon={<UserOutlined style={{ color: 'purple', backgroundColor: 'rgba(0,255,0,0.25)', borderRadius: 20, fontSize: 24, padding: 8 }} />} 
             title="Stock Managers" 
-            value={stockManagers || "Loading..."} // Display the calculated number of managers
+            value={stockManagers || "Loading..."} 
           />
           <DashboardCard 
             icon={<EuroOutlined style={{ color: 'green', backgroundColor: 'rgba(0,255,0,0.25)', borderRadius: 20, fontSize: 24, padding: 8 }} />} 
             title="Stock Value" 
-            value={stockValue ? `${stockValue.toFixed(2)} €` : "Loading..."} // Display stock value
+            value={stockValue ? `${stockValue.toFixed(2)} €` : "Loading..."} 
           />
         </Space>
       </Card>
@@ -136,12 +163,55 @@ function Dashboard() {
         <Card title="Recent Products Added to Inventory" style={{ width: '100%', borderRadius: '15px' }}>
           <Table
             columns={columns}
-            dataSource={sortedProducts.slice(0, 4)} // Show only the first 4 products, sorted by stock
-            pagination={false}
+            dataSource={sortedProducts.slice(0, 5)} 
+            pagination={7}
             rowKey="id"
           />
         </Card>
-        <DashboardChart />
+
+        <Card title="Future Product Deliveries" style={{ width: '100%', borderRadius: '15px' }}>
+        <Line 
+            data={{
+              labels,
+              datasets: [
+                {
+                  label: 'Future Product Deliveries',
+                  data,
+                  borderColor: 'rgb(75, 192, 192)',
+                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                  fill: true,
+                  tension: 0.4, // Linia va fi acum curbă
+                },
+              ],
+            }} 
+            options={{
+              responsive: true,
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'Estimated Future Product Deliveries',
+                },
+              },
+              scales: {
+                x: {
+                  title: {
+                    display: true,
+                    text: 'Date',
+                  },
+                },
+                y: {
+                  title: {
+                    display: true,
+                    text: 'Number of Products',
+                  },
+                  beginAtZero: true,
+                },
+              },
+            }}
+            height={400} // Set height to 400 for a shorter chart
+          />
+
+        </Card>
       </Space>
     </Space>
   );
@@ -155,36 +225,6 @@ function DashboardCard({ title, value, icon }) {
         {icon}
         <Statistic title={title} value={value} />
       </Space>
-    </Card>
-  );
-}
-
-// DashboardChart Component
-function DashboardChart() {
-  const revenueData = {
-    labels: ['User-1', 'User-2', 'User-3'],
-    datasets: [
-      {
-        label: 'Revenue per User',
-        data: [100, 200, 300],
-        backgroundColor: 'rgb(16, 95, 0)',
-      },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    plugins: {
-      title: {
-        display: true,
-        text: 'User Revenue',
-      },
-    },
-  };
-
-  return (
-    <Card style={{ width: '50%' }}>
-      <Bar data={revenueData} options={options} />
     </Card>
   );
 }
