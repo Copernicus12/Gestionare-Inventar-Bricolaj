@@ -9,8 +9,16 @@ function Login({ setAuth }) {
 
   useEffect(() => {
     document.querySelector('.PageContent').classList.add('login-page');
+    // Hide menu and footer
+    const menu = document.querySelector('.menu');
+    const footer = document.querySelector('.footer');
+    if (menu) menu.style.display = 'none';
+    if (footer) footer.style.display = 'none';
     return () => {
       document.querySelector('.PageContent').classList.remove('login-page');
+      // Show menu and footer
+      if (menu) menu.style.display = 'block';
+      if (footer) footer.style.display = 'block';
     };
   }, []);
 
@@ -30,7 +38,7 @@ function Login({ setAuth }) {
     <div className="login-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}> {/* Add inline styles for centering */}
       <div className="login-box">
         <div className="login-form">
-          <h2>Login</h2>
+          <h2 style={{ color: 'black' }}>Login</h2>
           <p className="subtext">Please login to continue</p>
           <form onSubmit={handleSubmit}>
             <div className="input-group">

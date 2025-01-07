@@ -3,7 +3,7 @@ import './App.css';
 import AppHeader from './Components/AppHeader';
 import AppFooter from './Components/AppFooter';
 import SideMenu from './Components/SideMenu';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 // Import Pages
@@ -16,8 +16,18 @@ import Settings from './Pages/Settings';
 import Login from './Pages/Login';
 
 function App() {
+  return (
+    <Router>
+      <Main />
+    </Router>
+  );
+}
+
+function Main() {
   const [items, setItems] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('isAuthenticated') === 'true');
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/login';
 
   useEffect(() => {
     axios.get('http://localhost:1234/api/items')
@@ -30,32 +40,30 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <div className="App">
-        <AppHeader isAuthenticated={isAuthenticated} setAuth={setIsAuthenticated} />
-        <div className="SideMenuAndPageContent">
-          <SideMenu />
-          <div className="PageContent">
-            <Routes>
-              <Route path="/login" element={<Login setAuth={setIsAuthenticated} />} />
-              {isAuthenticated ? (
-                <>
-                  <Route path="/" element={<Dashboard items={items} />} />
-                  <Route path="/inventory" element={<Inventory items={items} />} />
-                  <Route path="/orders" element={<Orders items={items} />} />
-                  <Route path="/stock" element={<Stock items={items} />} />
-                  <Route path="/rfid" element={<RFID items={items} />} />
-                  <Route path="/settings" element={<Settings items={items} />} />
-                </>
-              ) : (
-                <Route path="*" element={<Login setAuth={setIsAuthenticated} />} />
-              )}
-            </Routes>
-          </div>
+    <div className="App">
+      {!isLoginPage && <AppHeader isAuthenticated={isAuthenticated} setAuth={setIsAuthenticated} />}
+      <div className="SideMenuAndPageContent">
+        {!isLoginPage && <SideMenu />}
+        <div className="PageContent">
+          <Routes>
+            <Route path="/login" element={<Login setAuth={setIsAuthenticated} />} />
+            {isAuthenticated ? (
+              <>
+                <Route path="/" element={<Dashboard items={items} />} />
+                <Route path="/inventory" element={<Inventory items={items} />} />
+                <Route path="/orders" element={<Orders items={items} />} />
+                <Route path="/stock" element={<Stock items={items} />} />
+                <Route path="/rfid" element={<RFID items={items} />} />
+                <Route path="/settings" element={<Settings items={items} />} />
+              </>
+            ) : (
+              <Route path="*" element={<Login setAuth={setIsAuthenticated} />} />
+            )}
+          </Routes>
         </div>
-        <AppFooter />
       </div>
-    </Router>
+      {!isLoginPage && <AppFooter />}
+    </div>
   );
 }
 
