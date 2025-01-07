@@ -1,34 +1,34 @@
-Gestionare Inventar Bricolaj
+# Gestionare Inventar Bricolaj
 
 Gestionare Inventar Bricolaj este o aplicație web creată cu React pentru gestionarea unui inventar într-un magazin de bricolaj. Aplicația permite adăugarea, ștergerea, actualizarea și vizualizarea articolelor din inventar, precum și gestionarea categoriilor și stocurilor.
 
-Funcționalități
+## Funcționalități
 
 - Adăugare/Ștergere Articole: Permite adăugarea și ștergerea articolelor din inventar.
 - Gestionare Stocuri: Permite monitorizarea stocurilor pentru fiecare articol.
 - Căutare și Filtrare: Căutarea rapidă și filtrarea articolelor după nume sau categorie.
 - Interfață prietenoasă: O interfață simplă și intuitivă pentru utilizatori.
 
-Cerințe
+## Cerințe
 
 Pentru a rula aplicația pe mașina locală, trebuie să ai următoarele instalate:
 
 - Node.js - Asigură-te că ai instalat Node.js pe sistemul tău. Poți descărca Node.js de la https://nodejs.org/.
 - npm - Managerul de pachete pentru Node.js (de obicei vine împreună cu Node.js).
 
-Instalare
+## Instalare
 
 Pentru a configura proiectul local, urmează pașii de mai jos:
 
-1. Clonează repository-ul
+### 1. Clonează repository-ul
 
 git clone https://github.com/Copernicus12/Gestionare-Inventar-Bricolaj.git
 
-2. Navighează în directorul proiectului
+### 2. Navighează în directorul proiectului
 
 cd Gestionare-Inventar-Bricolaj
 
-3. Instalează dependențele
+### 3. Instalează dependențele
 
 Instalează toate pachetele necesare folosind npm:
 
@@ -36,7 +36,7 @@ npm install
 
 Acest comandă va instala toate pachetele listate în fișierul package.json al proiectului.
 
-4. Lansează aplicația
+### 4. Lansează aplicația
 
 După ce dependențele sunt instalate, poți porni aplicația cu:
 
@@ -46,7 +46,7 @@ Aplicația va fi accesibilă în browser la adresa http://localhost:3000, modifi
 
 cd backend si node server.js pentru comunicarea cu MongoDB si fetch ul datelor
 
-Utilizare
+## Utilizare
 
 Odată ce aplicația este rulată, poți utiliza următoarele funcționalități:
 
@@ -56,7 +56,7 @@ Odată ce aplicația este rulată, poți utiliza următoarele funcționalități
 - Actualizarea articolelor: Modifică detalii precum cantitatea, prețul sau descrierea articolelor.
 - Ștergerea articolelor: Poți elimina articole care nu mai sunt necesare.
 
-Structura Proiectului
+## Structura Proiectului
 
 Iată o descriere a principalelor fișiere și directoare din proiect:
 
@@ -71,7 +71,7 @@ Gestionare-Inventar-Bricolaj/
 ├── README.md               # Documentația proiectului (acest fișier)
 └── .gitignore              # Fișierele care nu sunt urmărite de Git
 
-Contribuții
+## Contribuții
 
 Dacă dorești să contribui la proiect, te rugăm să urmezi acești pași:
 
@@ -81,7 +81,7 @@ Dacă dorești să contribui la proiect, te rugăm să urmezi acești pași:
 4. Pushează modificările (git push origin feature-noua).
 5. Creează un Pull Request.
 
-Licență
+## Licență
 
 Acest proiect este licențiat sub Licența MIT - vezi fișierul LICENSE pentru detalii.
 
