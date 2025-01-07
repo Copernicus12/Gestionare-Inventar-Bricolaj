@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Space, Typography, Popconfirm, Modal, Form, Input, message } from "antd";
+import { Table, Button, Space, Typography, Popconfirm, Modal, Form, Input, message, Row, Col } from "antd";
 
 const API_URL = "http://localhost:1234/api/data/employees"; // Asigură-te că este corect
 
@@ -67,13 +67,13 @@ const Stock = () => {
         ...values,
         nextWorkDay: "2025-01-06", // Default next work day
         workSchedule: {
-          Monday: "00:00 - 08:00",
-          Tuesday: "00:00 - 08:00",
-          Wednesday: "00:00 - 08:00",
-          Thursday: "00:00 - 08:00",
-          Friday: "00:00 - 08:00",
-          Saturday: "Off",
-          Sunday: "Off",
+          Monday: values.Monday || "Not Set",
+          Tuesday: values.Tuesday || "Not Set",
+          Wednesday: values.Wednesday || "Not Set",
+          Thursday: values.Thursday || "Not Set",
+          Friday: values.Friday || "Not Set",
+          Saturday: values.Saturday || "Not Set",
+          Sunday: values.Sunday || "Not Set",
         },
       };
   
@@ -138,8 +138,6 @@ const Stock = () => {
       console.error("Error:", error);
     }
   };
-  
-  
 
   return (
     <Space size={20} direction="vertical" style={{ width: "100%" }}>
@@ -207,7 +205,7 @@ const Stock = () => {
         destroyOnClose
       >
         <Form
-          initialValues={isEdit && currentEmployee ? currentEmployee : {}}
+          initialValues={isEdit && currentEmployee ? { ...currentEmployee, ...currentEmployee.workSchedule } : {}}
           onFinish={handleFormSubmit}
         >
           <Form.Item
@@ -231,6 +229,17 @@ const Stock = () => {
           >
             <Input />
           </Form.Item>
+
+          <Row gutter={16}>
+            {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day) => (
+              <Col span={8} key={day}>
+                <Form.Item label={day} name={day}>
+                  <Input />
+                </Form.Item>
+              </Col>
+            ))}
+          </Row>
+
           <Form.Item>
             <Button type="primary" htmlType="submit">
               {isEdit ? "Update Employee" : "Add Employee"}
