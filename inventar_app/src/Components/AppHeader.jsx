@@ -1,10 +1,20 @@
 import React from 'react';
 import { Layout, Typography, Input, Button } from 'antd';
 import { AreaChartOutlined } from '@ant-design/icons';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const { Header } = Layout;
 
-function AppHeader({ isLoggedIn, onLogout }) {
+function AppHeader({ isAuthenticated, setAuth }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleLogout = () => {
+    localStorage.removeItem('isAuthenticated');
+    setAuth(false);
+    navigate('/login');
+  };
+
   return (
     <Header className="AppHeader" style={headerStyle}>
       <div style={logoContainerStyle}>
@@ -19,17 +29,13 @@ function AppHeader({ isLoggedIn, onLogout }) {
           style={{ width: '70%' }}
         />
       </div>
-      <div style={buttonContainerStyle}>
-        {isLoggedIn ? (
-          <Button onClick={onLogout} type="primary">
-            Logout
+      {location.pathname !== '/login' && (
+        <div style={buttonContainerStyle}>
+          <Button onClick={isAuthenticated ? handleLogout : () => navigate('/login')} type="primary">
+            {isAuthenticated ? 'Log Out' : 'Log In'}
           </Button>
-        ) : (
-          <Button type="primary">
-            <a href="/login">Login</a>
-          </Button>
-        )}
-      </div>
+        </div>
+      )}
     </Header>
   );
 }

@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100vh; /* Center the form vertically */
   background-color: #f0f2f5;
 }
 
@@ -13,6 +13,7 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
+  border: 1px solid #ccc; /* Add gray border around the login form */
 }
 
 .LoginForm h2 {
@@ -40,6 +41,10 @@
   background-color: white; /* Fundalul input-ului este alb */
 }
 
+.input-group {
+  margin-bottom: 15px; /* Add spacing between input fields */
+}
+
 .LoginButton {
   width: 100%;
   padding: 10px;
@@ -50,10 +55,24 @@
   cursor: pointer;
 }
 
+.btn-small {
+  padding: 8px 16px; /* Adjust button size */
+  margin-left: 50px; /* Move button 20px to the right */
+}
+
 .LoginButton:hover {
   background-color: #40a9ff;
 }
 
 p {
   color: black; /* Textul erorilor și al paragrafului este negru */
+}
+
+.login-box {
+  background-color: #e0e0e0; /* Gray background */
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
