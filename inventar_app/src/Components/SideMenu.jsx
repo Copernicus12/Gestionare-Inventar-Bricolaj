@@ -45,13 +45,22 @@ function SideMenu() {
             label: 'RFID',
             icon: <ScanOutlined />,
             key: '/rfid',
+            children: [
+              {
+                label: 'RFID Statistics',
+                key: '/rfid',
+              },
+              {
+                label: 'RFID Devices',
+                key: '/rfid/rfid_devices',
+              }
+            ],
           },
-          // Add the Settings section here
           {
             label: 'Settings',
             icon: <SettingOutlined />,
             key: '/settings',
-            style: { position: 'absolute', bottom: 45, width: '6.3%' }, // Make it stick to the bottom
+            style: { position: 'absolute', bottom: 45, width: '6.3%' },
           }
         ]}
       />

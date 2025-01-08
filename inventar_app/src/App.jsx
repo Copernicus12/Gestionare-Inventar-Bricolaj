@@ -14,6 +14,7 @@ import Stock from './Pages/Stock';
 import RFID from './Pages/RFID';
 import Settings from './Pages/Settings';
 import Login from './Pages/Login';
+import RFID_Devices from './Pages/RFID_Devices';
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function Main() {
                 <Route path="/stock" element={<Stock items={items} />} />
                 <Route path="/rfid" element={<RFID items={items} />} />
                 <Route path="/settings" element={<Settings items={items} />} />
+                <Route path="/rfid/rfid_devices" element={<RFID_Devices />} />
               </>
             ) : (
               <Route path="*" element={<Login setAuth={setIsAuthenticated} />} />

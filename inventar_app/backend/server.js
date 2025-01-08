@@ -399,7 +399,80 @@ app.delete('/api/data/orders/:id', async (req, res) => {
   }
 });
 
+// Fetch all RFID devices
+app.get('/api/data/rfid_devices', async (req, res) => {
+  try {
+    const db = client.db('inventar'); // Use your actual database name
+    const collection = db.collection('rfid_devices'); // Your collection name
+    const data = await collection.find({}).toArray(); // Fetch all RFID devices
+    res.json(data); // Respond with the data in JSON format
+  } catch (err) {
+    console.error('Failed to fetch RFID devices:', err);
+    res.status(500).json({ message: 'Failed to fetch RFID devices', error: err.message });
+  }
+});
 
+// Add a new RFID device
+app.post('/api/data/rfid_devices', async (req, res) => {
+  try {
+    const newRfidDevice = req.body; // New RFID device data from frontend
+    const db = client.db('inventar');
+    const collection = db.collection('rfid_devices');
+    const result = await collection.insertOne(newRfidDevice);
+    res.status(201).json({ message: 'RFID device added successfully', id: result.insertedId });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to add RFID device', error: err.message });
+  }
+});
+
+// Update an RFID device
+app.put('/api/data/rfid_devices/:id', async (req, res) => {
+  try {
+    const { id } = req.params;  // The ID of the RFID device to update
+    const updatedRfidDevice = req.body; // The updated RFID device data from the frontend
+
+    const objectId = new ObjectId(id); // Convert id to ObjectId
+
+    const db = client.db('inventar');
+    const collection = db.collection('rfid_devices');
+
+    const result = await collection.updateOne(
+      { _id: objectId },  // Find RFID device by _id
+      { $set: updatedRfidDevice } // Update the fields
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: 'RFID device not found' });
+    }
+
+    res.json({ message: 'RFID device updated successfully' });
+  } catch (error) {
+    console.error('Error during RFID device update:', error);
+    res.status(500).json({ message: 'Failed to update RFID device', error: error.message });
+  }
+});
+
+// Delete an RFID device
+app.delete('/api/data/rfid_devices/:id', async (req, res) => {
+  try {
+    const { id } = req.params;  // The ID of the RFID device to delete
+    const objectId = new ObjectId(id); // Convert id to ObjectId
+
+    const db = client.db('inventar');
+    const collection = db.collection('rfid_devices');
+
+    const result = await collection.deleteOne({ _id: objectId });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'RFID device not found' });
+    }
+
+    res.json({ message: 'RFID device deleted successfully' });
+  } catch (error) {
+    console.error('Error while deleting RFID device:', error);
+    res.status(500).json({ message: 'Failed to delete RFID device', error: error.message });
+  }
+});
 
 // Start the server
 app.listen(port, () => {
