@@ -8,7 +8,7 @@ const port = 1234;
 const { ObjectId } = require('mongodb'); // Import ObjectId
 
 app.use(cors());
-app.use(express.json()); // For parsing application/json
+app.use(express.json()); 
 
 const uri = 'mongodb+srv://admin:FE2dBBOCG6QODZA3@cluster0.hols2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
@@ -30,16 +30,16 @@ async function connectDB() {
   }
 }
 
-// Function to save the product in the database
+
 async function saveProduct(productData) {
   try {
     const db = client.db('inventar');
     const collection = db.collection('products');
     const result = await collection.insertOne(productData);
-    return result.ops[0]; // Return the inserted product data
+    return result.ops[0]; 
   } catch (error) {
     console.error('Error saving product:', error);
-    throw error; // Rethrow the error to be caught in the route
+    throw error; 
   }
 }
 
@@ -48,7 +48,7 @@ app.get('/api/data/employees', async (req, res) => {
   try {
     const db = client.db('inventar');
     const collection = db.collection('employees');
-    const data = await collection.find({}).limit(100).toArray(); // Limit the result to 10 employees
+    const data = await collection.find({}).limit(100).toArray(); 
     res.json(data);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch employees', error: err.message });
@@ -71,22 +71,21 @@ app.post('/api/data/employees', async (req, res) => {
 // Update all employees
 app.put('/api/data/employees/:id', async (req, res) => {
   try {
-    const { id } = req.params;  // The ID of the employee to update
-    const updatedEmployee = req.body; // The updated employee data from the frontend
+    const { id } = req.params;  
+    const updatedEmployee = req.body; 
 
-    // Ensure the id is correctly converted to ObjectId
+    
     const objectId = new ObjectId(id);
 
     const db = client.db('inventar');
     const collection = db.collection('employees');
 
-    // Perform the update operation
+    
     const result = await collection.updateOne(
-      { _id: objectId }, // Find employee by _id
-      { $set: updatedEmployee } // Update the fields
+      { _id: objectId }, 
+      { $set: updatedEmployee } 
     );
 
-    // If no document was found or updated
     if (result.matchedCount === 0) {
       return res.status(404).json({ message: 'Employee not found' });
     }
@@ -101,7 +100,7 @@ app.put('/api/data/employees/:id', async (req, res) => {
 // Delete all employees
 app.delete('/api/data/employees/:id', async (req, res) => {
   try {
-    const { id } = req.params;  // The ID from the URL
+    const { id } = req.params;  
 
     // Ensure the id is correctly converted to ObjectId
     const objectId = new ObjectId(id);
@@ -109,17 +108,15 @@ app.delete('/api/data/employees/:id', async (req, res) => {
     const db = client.db('inventar');
     const collection = db.collection('employees');
 
-    // Perform delete operation
     const result = await collection.deleteOne({ _id: objectId });
 
-    // Check if any document was deleted
     if (result.deletedCount === 0) {
       return res.status(404).json({ message: 'Employee not found' });
     }
 
     res.json({ message: 'Employee deleted successfully' });
   } catch (error) {
-    console.error('Error while deleting employee:', error); // Log the error for debugging
+    console.error('Error while deleting employee:', error); 
     res.status(500).json({ message: 'Failed to delete employee', error: error.message });
   }
 });
@@ -129,7 +126,7 @@ app.get('/api/data/rfid', async (req, res) => {
   try {
     const db = client.db('inventar');
     const collection = db.collection('rfid');
-    const data = await collection.find({}).limit(100).toArray(); // Limit to 10 RFID entries
+    const data = await collection.find({}).limit(100).toArray(); 
     res.json(data);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch RFID data', error: err.message });
@@ -139,7 +136,7 @@ app.get('/api/data/rfid', async (req, res) => {
 // Add new RFID entry
 app.post('/api/data/rfid', async (req, res) => {
   try {
-    const newRfidData = req.body; // New RFID entry data from frontend
+    const newRfidData = req.body;
     const db = client.db('inventar');
     const collection = db.collection('rfid');
     const result = await collection.insertOne(newRfidData);
@@ -152,10 +149,10 @@ app.post('/api/data/rfid', async (req, res) => {
 // Update RFID entry
 app.put('/api/data/rfid/:id', async (req, res) => {
   try {
-    const { id } = req.params;  // The ID of the RFID to update
-    const updatedRfidData = req.body; // The updated RFID data from the frontend
+    const { id } = req.params; 
+    const updatedRfidData = req.body; 
 
-    const objectId = new ObjectId(id); // Convert id to ObjectId
+    const objectId = new ObjectId(id); 
 
     const db = client.db('inventar');
     const collection = db.collection('rfid');
@@ -203,7 +200,7 @@ app.get('/api/data/products', async (req, res) => {
   try {
     const db = client.db('inventar');
     const collection = db.collection('products');
-    const data = await collection.find({}).limit(100).toArray(); // Limit to 10 products
+    const data = await collection.find({}).limit(100).toArray(); 
     res.json(data);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch products', error: err.message });
@@ -213,22 +210,18 @@ app.get('/api/data/products', async (req, res) => {
 // Add new product
 app.post('/api/data/products', async (req, res) => {
   try {
-    // Găsește ultimul produs din tabelul 'products' în baza de date
     const lastProduct = await client.db('inventar').collection('products').find().sort({ id: -1 }).limit(1).toArray();
     
-    // Determină id-ul nou
     const newId = lastProduct.length > 0 ? (parseInt(lastProduct[0].id) + 1).toString() : '1';
 
-    // Crează un nou produs cu id-ul calculat
+
     const newProduct = {
       ...req.body,
-      id: newId,  // Atribuim id-ul calculat
+      id: newId,  
     };
 
-    // Salvează produsul în baza de date
     await client.db('inventar').collection('products').insertOne(newProduct);
 
-    // Returnează răspunsul cu produsul salvat
     res.status(201).json(newProduct);
   } catch (error) {
     console.error("Error adding product:", error);
@@ -240,27 +233,23 @@ app.post('/api/data/products', async (req, res) => {
 // Update product
 app.put('/api/data/products/:id', async (req, res) => {
   try {
-    const { id } = req.params;  // The ID of the product to update
-    const updatedProduct = req.body; // The updated product data from the frontend
+    const { id } = req.params; 
+    const updatedProduct = req.body; 
 
-    // Validate the ID before converting to ObjectId
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ message: 'Invalid product ID format' });
     }
 
-    // Convert id to ObjectId
     const objectId = new ObjectId(id);
 
     const db = client.db('inventar');
     const collection = db.collection('products');
 
-    // Perform the update operation
     const result = await collection.updateOne(
-      { _id: objectId }, // Find product by _id
-      { $set: updatedProduct } // Update the fields
+      { _id: objectId }, 
+      { $set: updatedProduct } 
     );
 
-    // If no document was found or updated
     if (result.matchedCount === 0) {
       return res.status(404).json({ message: 'Product not found' });
     }
@@ -276,25 +265,22 @@ app.put('/api/data/products/:id', async (req, res) => {
 // Delete product
 app.delete('/api/data/products/:id', async (req, res) => {
   try {
-    const { id } = req.params;  // The ID from the URL
+    const { id } = req.params;  
 
-    // Ensure the id is correctly converted to ObjectId
     const objectId = new ObjectId(id);
 
     const db = client.db('inventar');
     const collection = db.collection('products');
 
-    // Perform delete operation
     const result = await collection.deleteOne({ _id: objectId });
 
-    // Check if any document was deleted
     if (result.deletedCount === 0) {
       return res.status(404).json({ message: 'Product not found' });
     }
 
     res.json({ message: 'Product deleted successfully' });
   } catch (error) {
-    console.error('Error while deleting product:', error); // Log the error for debugging
+    console.error('Error while deleting product:', error); 
     res.status(500).json({ message: 'Failed to delete product', error: error.message });
   }
 });
@@ -305,7 +291,6 @@ app.get('/api/data/orders', async (req, res) => {
     const db = client.db('inventar');
     const collection = db.collection('orders');
     
-    // Filtrăm comenzile pentru a exclude cele marcate ca șterse
     const data = await collection.find({ deleted: { $ne: true } }).limit(100).toArray();
     res.json(data);
   } catch (err) {
@@ -317,19 +302,15 @@ app.get('/api/data/orders', async (req, res) => {
 // Add a new order
 app.post('/api/data/orders', async (req, res) => {
   try {
-    // Găsește ultima comandă din colecția 'orders' în baza de date
     const lastOrder = await client.db('inventar').collection('orders').find().sort({ id: -1 }).limit(1).toArray();
 
-    // Determină id-ul nou pe baza celui precedent
     const newId = lastOrder.length > 0 ? (parseInt(lastOrder[0].id) + 1).toString() : '1';
 
-    // Crează o nouă comandă cu id-ul calculat
     const newOrder = {
       ...req.body,
-      id: newId,  // Atribuim id-ul calculat
+      id: newId,  
     };
 
-    // Salvează comanda în baza de date
     const db = client.db('inventar');
     const collection = db.collection('orders');
     const result = await collection.insertOne(newOrder);
@@ -344,18 +325,16 @@ app.post('/api/data/orders', async (req, res) => {
 // Update an existing order
 app.put('/api/data/orders/:id', async (req, res) => {
   try {
-    const { id } = req.params;  // ID-ul comenzii care urmează să fie actualizată
-    const updatedOrder = req.body; // Datele actualizate ale comenzii trimise de frontend
+    const { id } = req.params; 
+    const updatedOrder = req.body; 
 
-    // Convertirea ID-ului la ObjectId
     const objectId = new ObjectId(id);
 
     const db = client.db('inventar');
     const collection = db.collection('orders');
 
-    // Efectuarea actualizării
     const result = await collection.updateOne(
-      { $set: updatedOrder } // Actualizează câmpurile
+      { $set: updatedOrder } 
     );
 
     if (result.matchedCount === 0) {
@@ -369,11 +348,11 @@ app.put('/api/data/orders/:id', async (req, res) => {
   }
 });
 
+// Delete an existing order
 app.delete('/api/data/orders/:id', async (req, res) => {
   try {
-    const { id } = req.params;  // ID-ul comenzii de șters (folosit ca parametru în URL)
+    const { id } = req.params;  
 
-    // Verifică dacă ID-ul este valid
     if (!id) {
       return res.status(400).json({ message: 'Invalid order ID format' });
     }
@@ -381,13 +360,12 @@ app.delete('/api/data/orders/:id', async (req, res) => {
     const db = client.db('inventar');
     const collection = db.collection('orders');
 
-    // Schimbă starea comenzii pentru a o marca drept ștearsă, folosind câmpul 'id'
+
     const result = await collection.updateOne(
-      { id: id },  // Căutăm comanda după câmpul personalizat 'id'
-      { $set: { deleted: true } }  // Marcăm comanda ca ștearsă, fără a o elimina din bază
+      { id: id },  
+      { $set: { deleted: true } }  
     );
 
-    // Dacă nu s-au găsit comenzi care să corespundă ID-ului, returnăm eroare
     if (result.matchedCount === 0) {
       return res.status(404).json({ message: 'Order not found' });
     }
@@ -402,10 +380,10 @@ app.delete('/api/data/orders/:id', async (req, res) => {
 // Fetch all RFID devices
 app.get('/api/data/rfid_devices', async (req, res) => {
   try {
-    const db = client.db('inventar'); // Use your actual database name
-    const collection = db.collection('rfid_devices'); // Your collection name
-    const data = await collection.find({}).toArray(); // Fetch all RFID devices
-    res.json(data); // Respond with the data in JSON format
+    const db = client.db('inventar'); 
+    const collection = db.collection('rfid_devices'); 
+    const data = await collection.find({}).toArray(); 
+    res.json(data); 
   } catch (err) {
     console.error('Failed to fetch RFID devices:', err);
     res.status(500).json({ message: 'Failed to fetch RFID devices', error: err.message });
@@ -415,7 +393,7 @@ app.get('/api/data/rfid_devices', async (req, res) => {
 // Add a new RFID device
 app.post('/api/data/rfid_devices', async (req, res) => {
   try {
-    const newRfidDevice = req.body; // New RFID device data from frontend
+    const newRfidDevice = req.body; 
     const db = client.db('inventar');
     const collection = db.collection('rfid_devices');
     const result = await collection.insertOne(newRfidDevice);
@@ -428,17 +406,17 @@ app.post('/api/data/rfid_devices', async (req, res) => {
 // Update an RFID device
 app.put('/api/data/rfid_devices/:id', async (req, res) => {
   try {
-    const { id } = req.params;  // The ID of the RFID device to update
-    const updatedRfidDevice = req.body; // The updated RFID device data from the frontend
+    const { id } = req.params;  
+    const updatedRfidDevice = req.body; 
 
-    const objectId = new ObjectId(id); // Convert id to ObjectId
+    const objectId = new ObjectId(id); 
 
     const db = client.db('inventar');
     const collection = db.collection('rfid_devices');
 
     const result = await collection.updateOne(
-      { _id: objectId },  // Find RFID device by _id
-      { $set: updatedRfidDevice } // Update the fields
+      { _id: objectId },  
+      { $set: updatedRfidDevice } 
     );
 
     if (result.matchedCount === 0) {
@@ -455,8 +433,8 @@ app.put('/api/data/rfid_devices/:id', async (req, res) => {
 // Delete an RFID device
 app.delete('/api/data/rfid_devices/:id', async (req, res) => {
   try {
-    const { id } = req.params;  // The ID of the RFID device to delete
-    const objectId = new ObjectId(id); // Convert id to ObjectId
+    const { id } = req.params;  
+    const objectId = new ObjectId(id);
 
     const db = client.db('inventar');
     const collection = db.collection('rfid_devices');

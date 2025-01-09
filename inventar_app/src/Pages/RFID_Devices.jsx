@@ -9,13 +9,6 @@ const RFID_Devices = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [newDeviceDetails, setNewDeviceDetails] = useState({
-    id: "",
-    name: "",
-    imei_device: "",
-    status: "",
-    location: "",
-    baterie: "",
-    rfid_module: "",
   });
   const [isEditing, setIsEditing] = useState(false);
 
@@ -27,7 +20,7 @@ const RFID_Devices = () => {
         throw new Error("Failed to fetch RFID devices.");
       }
       const data = await response.json();
-      setRfidDevices(data); // Set the fetched devices in state
+      setRfidDevices(data); 
     } catch (error) {
       message.error("Failed to fetch RFID devices.");
       console.error(error);
@@ -35,7 +28,7 @@ const RFID_Devices = () => {
   };
 
   useEffect(() => {
-    fetchRfidDevices(); // Fetch data when component mounts
+    fetchRfidDevices(); 
   }, []);
 
   const handleViewDetails = (record) => {
@@ -45,7 +38,7 @@ const RFID_Devices = () => {
 
   const handleAddDevice = () => {
     setIsAddModalVisible(true);
-    setIsEditing(false); // Set to false when adding new device
+    setIsEditing(false); 
   };
 
   const handleAddDeviceSubmit = async () => {
@@ -60,8 +53,8 @@ const RFID_Devices = () => {
 
       if (response.ok) {
         message.success("RFID Device added successfully!");
-        fetchRfidDevices(); // Refresh the list of RFID devices
-        setIsAddModalVisible(false); // Close the modal
+        fetchRfidDevices(); 
+        setIsAddModalVisible(false); 
         setNewDeviceDetails({
           id: "",
           name: "",
@@ -83,7 +76,7 @@ const RFID_Devices = () => {
   const handleEditDevice = (device) => {
     setNewDeviceDetails(device);
     setIsAddModalVisible(true);
-    setIsEditing(true); // Set to true when editing device
+    setIsEditing(true);
   };
 
   const handleUpdateDeviceSubmit = async () => {
@@ -99,7 +92,7 @@ const RFID_Devices = () => {
       if (response.ok) {
         message.success("RFID Device updated successfully!");
         fetchRfidDevices(); // Refresh the list of RFID devices
-        setIsAddModalVisible(false); // Close the modal
+        setIsAddModalVisible(false); 
         setNewDeviceDetails({
           id: "",
           name: "",
@@ -126,7 +119,7 @@ const RFID_Devices = () => {
 
       if (response.ok) {
         message.success("RFID Device deleted successfully!");
-        fetchRfidDevices(); // Refresh the list of RFID devices
+        fetchRfidDevices(); 
       } else {
         message.error("Failed to delete RFID device.");
       }
@@ -150,22 +143,22 @@ const RFID_Devices = () => {
     });
   };
 
-  // Function to get status color, background, and border style
+
   const getStatusStyle = (status) => {
     if (status === "active") {
       return {
-        color: "white", // Text color
-        backgroundColor: "green", // Background color for active
-        border: "2px solid green", // Border color for active
-        borderRadius: "50px", // Oval shape
-        padding: "5px 15px", // Padding for space around text
+        color: "white", 
+        backgroundColor: "green", 
+        border: "2px solid green", 
+        borderRadius: "50px", 
+        padding: "5px 15px",
       };
     } else if (status === "inactive") {
       return {
-        color: "white", // Text color
-        backgroundColor: "#A20102", // Background color for inactive
-        borderRadius: "50px", // Oval shape
-        padding: "5px 15px", // Padding for space around text
+        color: "white", 
+        backgroundColor: "#A20102", 
+        borderRadius: "50px", 
+        padding: "5px 15px", 
       };
     }
     return {};
@@ -181,7 +174,7 @@ const RFID_Devices = () => {
             type="primary"
             style={{
               marginBottom: 16,
-              backgroundColor: "#4CAF50", // Green color for success
+              backgroundColor: "#4CAF50", 
               borderColor: "#4CAF50",
             }}
             onClick={handleAddDevice}
@@ -194,12 +187,12 @@ const RFID_Devices = () => {
   columns={[
     {
       title: "Device ID",
-      dataIndex: "id",  // Ar putea să fie 'device_002' sau altceva
-      render: (text) => <span>{text}</span>, // Verifică că ai cheia corectă
+      dataIndex: "id",  
+      render: (text) => <span>{text}</span>, 
     },
     {
       title: "Device Name",
-      dataIndex: "nume", // Folosește cheia 'nume' dacă aceasta este corectă
+      dataIndex: "nume", 
     },
     {
       title: "IMEI Device",
@@ -236,7 +229,7 @@ const RFID_Devices = () => {
           </Button>
           <Popconfirm
             title="Are you sure to delete this device?"
-            onConfirm={() => handleDeleteDevice(record.id)} // Asigură-te că folosești cheia corectă
+            onConfirm={() => handleDeleteDevice(record.id)} 
           >
             <Button type="link" danger>
               Delete
@@ -246,11 +239,11 @@ const RFID_Devices = () => {
       ),
     },
   ]}
-  dataSource={rfidDevices} // Aceasta va citi corect fiecare obiect
+  dataSource={rfidDevices} 
   pagination={{
     pageSize: 5,
   }}
-  rowKey="id" // Verifică dacă ai cheia corectă
+  rowKey="id" 
   style={{
     borderRadius: "16px",
     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",

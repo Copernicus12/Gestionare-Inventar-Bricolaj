@@ -59,22 +59,20 @@ const RFID = () => {
     }
   };
 
-  // Extract and increment the last RFID ID
   const generateNewRfidId = () => {
     const lastRfid = rfidData
       .map((item) => item.id)
       .sort()
-      .pop(); // Get the latest (max) RFID ID
+      .pop(); 
 
     if (lastRfid) {
-      // Extract the number part from "rfidX" format
       const lastRfidNumber = parseInt(lastRfid.replace("rfid", ""), 10);
-      return `rfid${lastRfidNumber + 1}`; // Increment the number and return the new ID
+      return `rfid${lastRfidNumber + 1}`; 
     }
-    return "rfid1"; // If no RFID exists, start from rfid1
+    return "rfid1"; 
   };
 
-  // Calculate the total scanned products and total products
+
   const calculateProgress = () => {
     const totalScanned = lastRfidProducts.reduce((sum, product) => sum + product.quantity, 0);
     const totalAvailable = products.reduce((sum, product) => sum + product.stock, 0);
@@ -84,7 +82,7 @@ const RFID = () => {
     return Math.min((totalScanned / totalAvailable) * 100, 100);
   };
 
-  // Initial fetch of RFID data and products
+
   useEffect(() => {
     fetchRfidData();
     fetchProducts();
@@ -115,9 +113,9 @@ const RFID = () => {
   };
 
   const handleAddRfidSubmit = async () => {
-    const newRfidId = generateNewRfidId(); // Generate a new RFID ID
+    const newRfidId = generateNewRfidId(); 
     const newRfidData = {
-      id: newRfidId,  // New ID for the RFID entry
+      id: newRfidId,  
       ...newRfidDetails,
       products: Object.entries(selectedProducts).map(([id, { name, quantity }]) => ({
         id,
@@ -137,7 +135,7 @@ const RFID = () => {
   
       if (response.ok) {
         message.success("RFID entry added successfully");
-        fetchRfidData(); // Refresh the list of RFID data after adding a new entry
+        fetchRfidData(); 
         handleAddCancel();
       } else {
         message.error("Failed to add RFID entry.");
@@ -172,7 +170,7 @@ const RFID = () => {
             type="primary"
             style={{
               marginBottom: 16,
-              backgroundColor: "#4CAF50", // Green for success
+              backgroundColor: "#4CAF50", 
               borderColor: "#4CAF50",
             }}
             onClick={() => setIsAddModalVisible(true)}
@@ -246,7 +244,7 @@ const RFID = () => {
               boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
               overflow: "hidden",
               backgroundColor: "#fff",
-              marginTop: "47px", // Add margin top
+              marginTop: "47px", 
             }}
           />
         </div>

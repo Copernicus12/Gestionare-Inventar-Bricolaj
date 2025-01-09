@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Space, Typography, Popconfirm, Modal, Form, Input, message, Row, Col } from "antd";
 
-const API_URL = "http://localhost:1234/api/data/employees"; // Asigură-te că este corect
+const API_URL = "http://localhost:1234/api/data/employees";
 
 const Stock = () => {
   const [employees, setEmployees] = useState([]);
@@ -26,21 +26,21 @@ const Stock = () => {
     fetchEmployees();
   }, []);
 
-  // Show modal for adding an employee
+  // modal for adding an employee
   const showAddModal = () => {
     setIsEdit(false);
     setCurrentEmployee(null);
     setIsModalVisible(true);
   };
 
-  // Show modal for editing an employee
+  // modal for editing an employee
   const showEditModal = (employee) => {
     setIsEdit(true);
     setCurrentEmployee(employee);
     setIsModalVisible(true);
   };
 
-  // Show modal for viewing employee details
+  // modal for viewing employee details
   const showViewModal = (employee) => {
     const defaultWorkSchedule = {
       Monday: "Not Set",
@@ -60,7 +60,6 @@ const Stock = () => {
     setIsViewModalVisible(true);
   };
 
-  // Handle form submission for adding or editing an employee
   const handleFormSubmit = async (values) => {
     try {
       const employeeData = {

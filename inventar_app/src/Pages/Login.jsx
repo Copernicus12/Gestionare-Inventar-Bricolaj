@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../Login.css'; // Importing the CSS file
+import '../Login.css';
 
 function Login({ setAuth }) {
   const [username, setUsername] = useState('');
@@ -9,14 +9,12 @@ function Login({ setAuth }) {
 
   useEffect(() => {
     document.querySelector('.PageContent').classList.add('login-page');
-    // Hide menu and footer
     const menu = document.querySelector('.menu');
     const footer = document.querySelector('.footer');
     if (menu) menu.style.display = 'none';
     if (footer) footer.style.display = 'none';
     return () => {
       document.querySelector('.PageContent').classList.remove('login-page');
-      // Show menu and footer
       if (menu) menu.style.display = 'block';
       if (footer) footer.style.display = 'block';
     };
@@ -24,7 +22,6 @@ function Login({ setAuth }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Simple authentication logic for demonstration
     if (username === 'admin' && password === 'password') {
       localStorage.setItem('isAuthenticated', 'true');
       setAuth(true);

@@ -10,7 +10,7 @@ function Inventory() {
 
   useEffect(() => {
     setLoading(true);
-    fetch('http://localhost:1234/api/data/products')  // Corect API endpoint
+    fetch('http://localhost:1234/api/data/products') 
       .then((response) => response.json())
       .then((data) => {
         setDataSource(data);
@@ -22,14 +22,13 @@ function Inventory() {
       });
   }, []);
 
-  // Show modal for adding product
+  // modal for adding product and product editing
   const showAddModal = () => {
     setIsEdit(false);
     setCurrentProduct(null);
     setIsModalVisible(true);
   };
 
-  // Show modal for editing product
   const showEditModal = (product) => {
     setIsEdit(true);
     setCurrentProduct(product);
@@ -38,7 +37,6 @@ function Inventory() {
 
   const handleFormSubmit = (values) => {
     if (isEdit) {
-      // Update product (PUT request)
       fetch(`http://localhost:1234/api/data/products/${currentProduct._id}`, {
         method: "PUT",
         headers: {
@@ -48,13 +46,11 @@ function Inventory() {
       })
         .then((response) => response.json())
         .then(() => {
-          // Reload the product list to reflect changes
           fetchProducts();
           setIsModalVisible(false);
         })
         .catch((error) => console.error("Error updating product:", error));
     } else {
-      // Add new product (POST request)
       const newId = (Math.max(...dataSource.map((product) => parseInt(product.id))) + 1).toString(); // Calculate new ID
       const newProduct = { ...values, id: newId };
   
@@ -67,34 +63,29 @@ function Inventory() {
       })
         .then((response) => response.json())
         .then(() => {
-          fetchProducts(); // Reload product list
+          fetchProducts(); 
           setIsModalVisible(false);
         })
         .catch((error) => console.error("Error adding product:", error));
     }
   };
   
-  // Handle modal cancel
   const handleCancel = () => {
     setIsModalVisible(false);
   };
 
-  // Handle delete product
-// Handle delete product
 const handleDelete = (id) => {
   if (!id) {
     console.error("ID is undefined or invalid");
-    return; // Nu continuăm dacă ID-ul este invalid
+    return;
   }
 
-  // Trimite cererea de ștergere folosind ID-ul corect
   fetch(`http://localhost:1234/api/data/products/${id}`, {
     method: "DELETE",
   })
     .then((response) => {
       if (response.ok) {
-        // Reîncarcă lista de produse după ștergere
-        fetchProducts(); // Reîncarcă lista de produse
+        fetchProducts(); 
       } else {
         console.error("Error deleting product:", response.statusText);
       }
@@ -161,7 +152,7 @@ const fetchProducts = () => {
           {
             title: "Action",
             key: "action",
-            align: "center", // Center align the Action column
+            align: "center", 
             render: (text, record) => (
               <div>
                 <Button type="link" onClick={() => showEditModal(record)}>
@@ -169,7 +160,7 @@ const fetchProducts = () => {
                 </Button>
                 <Popconfirm
                   title="Are you sure you want to delete this product?"
-                  onConfirm={() => handleDelete(record._id)} // Folosește _id
+                  onConfirm={() => handleDelete(record._id)} 
                   okText="Yes"
                   cancelText="No"
                 >
@@ -183,7 +174,7 @@ const fetchProducts = () => {
         ]}
         dataSource={dataSource}
         pagination={{
-          pageSize: 5, // Set maximum items per page to 5
+          pageSize: 5, 
         }}
         style={{
           borderRadius: "16px",

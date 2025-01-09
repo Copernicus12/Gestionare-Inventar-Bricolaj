@@ -30,20 +30,17 @@ function Orders() {
       });
   }, []);
 
-  // Show modal for adding a new order
   const showAddModal = () => {
     setIsModalVisible(true);
   };
 
-  // Handle form submit for adding orders
   const handleFormSubmit = (values) => {
     const orderData = {
       ...values,
-      orderDate: values.orderDate.format("YYYY-MM-DD"), // Format order date
-      deliveryDate: values.deliveryDate ? values.deliveryDate.format("YYYY-MM-DD") : null, // Format delivery date
+      orderDate: values.orderDate.format("YYYY-MM-DD"), 
+      deliveryDate: values.deliveryDate ? values.deliveryDate.format("YYYY-MM-DD") : null, // delivery date
     };
 
-    // Add new order (POST request)
     fetch("http://localhost:1234/api/data/orders", {
       method: "POST",
       headers: {
@@ -59,12 +56,10 @@ function Orders() {
       .catch((error) => console.error("Error adding order:", error));
   };
 
-  // Handle cancel button in the modal
   const handleCancel = () => {
     setIsModalVisible(false);
   };
 
-  // Handle delete order
   const handleDelete = (id) => {
     fetch(`http://localhost:1234/api/data/orders/${id}`, {
       method: "DELETE",
@@ -145,7 +140,7 @@ function Orders() {
         ]}
         dataSource={dataSource}
         pagination={{
-          pageSize: 5, // Limit rows per page
+          pageSize: 5,
         }}
         style={{
           borderRadius: "16px",

@@ -24,11 +24,10 @@ function Dashboard() {
     fetch("http://localhost:1234/api/data/orders")
       .then((response) => response.json())
       .then((data) => {
-        // Filter orders to include only those with a delivery date >= today
-        const today = new Date().toISOString().split('T')[0]; // Get today's date in 'YYYY-MM-DD' format
+
+        const today = new Date().toISOString().split('T')[0]; 
         const futureOrders = data.filter(order => order.deliveryDate >= today);
 
-        // Sort orders by delivery date in ascending order
         const sortedOrders = futureOrders.sort((a, b) => new Date(a.deliveryDate) - new Date(b.deliveryDate));
 
         const totalIncoming = sortedOrders.reduce((acc, order) => acc + order.quantity, 0);
@@ -98,25 +97,23 @@ function Dashboard() {
 
     orders.forEach(order => {
       const deliveryDate = new Date(order.deliveryDate);
-      const dateString = deliveryDate.toISOString().split('T')[0]; // Get the date in 'YYYY-MM-DD' format
+      const dateString = deliveryDate.toISOString().split('T')[0]; //'YYYY-MM-DD' format
       if (!futureDeliveries[dateString]) {
         futureDeliveries[dateString] = 0;
       }
       futureDeliveries[dateString] += order.quantity;
     });
 
-    const labels = Object.keys(futureDeliveries); // Extract dates
-    const data = Object.values(futureDeliveries); // Extract corresponding quantities
+    const labels = Object.keys(futureDeliveries); 
+    const data = Object.values(futureDeliveries);
 
     return { labels, data };
   };
 
   const { labels, data } = prepareDeliveryData();
 
-  // Sorting products by stock in descending order
   const sortedProducts = products.sort((a, b) => b.id - a.id);
 
-  // Table Columns for Inventory Products
   const columns = [
     { title: 'Title', dataIndex: 'title' },
     { title: 'Stock', dataIndex: 'stock' },
@@ -180,7 +177,7 @@ function Dashboard() {
                   borderColor: 'rgb(75, 192, 192)',
                   backgroundColor: 'rgba(75, 192, 192, 0.2)',
                   fill: true,
-                  tension: 0.4, // Linia va fi acum curbă
+                  tension: 0.4, 
                 },
               ],
             }} 
@@ -208,7 +205,7 @@ function Dashboard() {
                 },
               },
             }}
-            height={400} // Set height to 400 for a shorter chart
+            height={400} 
           />
 
         </Card>
@@ -217,7 +214,6 @@ function Dashboard() {
   );
 }
 
-// DashboardCard Component
 function DashboardCard({ title, value, icon }) {
   return (
     <Card style={{ width: '100%' }}>

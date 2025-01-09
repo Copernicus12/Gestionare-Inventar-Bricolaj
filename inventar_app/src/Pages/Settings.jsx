@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Settings = () => {
-  const [darkMode, setDarkMode] = useState(false); // Starea pentru dark mode
+  const [darkMode, setDarkMode] = useState(false); 
   const navigate = useNavigate();
 
-  // Încărcarea setărilor la încărcarea paginii
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
@@ -13,7 +12,6 @@ const Settings = () => {
     }
   }, []);
 
-  // Schimbarea temei
   const handleThemeChange = () => {
     setDarkMode(!darkMode);
     if (darkMode) {

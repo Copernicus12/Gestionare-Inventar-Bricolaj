@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Center the form vertically */
+  height: 100vh; 
   background-color: #f0f2f5;
 }
 
@@ -13,11 +13,11 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
-  border: 1px solid #ccc; /* Add gray border around the login form */
+  border: 1px solid #ccc; 
 }
 
 .LoginForm h2 {
-  color: black; /* Setează textul titlului "Login" la negru */
+  color: black; 
   text-align: center;
 }
 
@@ -29,7 +29,7 @@
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
-  color: black; /* Textul etichetelor este negru */
+  color: black; 
 }
 
 .FormGroup input {
@@ -37,27 +37,27 @@
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  color: black; /* Textul introdus în input este negru */
-  background-color: white; /* Fundalul input-ului este alb */
+  color: black; 
+  background-color: white; 
 }
 
 .input-group {
-  margin-bottom: 15px; /* Add spacing between input fields */
+  margin-bottom: 15px; 
 }
 
 .LoginButton {
   width: 100%;
   padding: 10px;
   background-color: #1890ff;
-  color: white; /* Textul butonului rămâne alb */
+  color: white; 
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
 .btn-small {
-  padding: 8px 16px; /* Adjust button size */
-  margin-left: 50px; /* Move button 20px to the right */
+  padding: 8px 16px; 
+  margin-left: 50px; 
 }
 
 .LoginButton:hover {
@@ -65,11 +65,11 @@
 }
 
 p {
-  color: black; /* Textul erorilor și al paragrafului este negru */
+  color: black; 
 }
 
 .login-box {
-  background-color: #e0e0e0; /* Gray background */
+  background-color: #e0e0e0; 
   padding: 20px;
   border-radius: 8px;
   display: flex;

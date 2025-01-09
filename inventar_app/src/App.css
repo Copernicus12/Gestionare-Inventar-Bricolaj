@@ -46,6 +46,6 @@ border-top: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 .PageContent.login-page {
-  width: 100%; /* Set width to 100% only for login page */
+  width: 100%; 
 }
 
