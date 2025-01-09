@@ -154,7 +154,7 @@ const RFID_Devices = () => {
   const getStatusStyle = (status) => {
     if (status === "active") {
       return {
-        color: "black", // Text color
+        color: "white", // Text color
         backgroundColor: "green", // Background color for active
         border: "2px solid green", // Border color for active
         borderRadius: "50px", // Oval shape
@@ -162,7 +162,7 @@ const RFID_Devices = () => {
       };
     } else if (status === "inactive") {
       return {
-        color: "black", // Text color
+        color: "white", // Text color
         backgroundColor: "#A20102", // Background color for inactive
         borderRadius: "50px", // Oval shape
         padding: "5px 15px", // Padding for space around text
