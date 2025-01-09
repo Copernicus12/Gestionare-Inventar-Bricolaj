@@ -48,7 +48,7 @@ app.get('/api/data/employees', async (req, res) => {
   try {
     const db = client.db('inventar');
     const collection = db.collection('employees');
-    const data = await collection.find({}).limit(10).toArray(); // Limit the result to 10 employees
+    const data = await collection.find({}).limit(100).toArray(); // Limit the result to 10 employees
     res.json(data);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch employees', error: err.message });
@@ -129,7 +129,7 @@ app.get('/api/data/rfid', async (req, res) => {
   try {
     const db = client.db('inventar');
     const collection = db.collection('rfid');
-    const data = await collection.find({}).limit(10).toArray(); // Limit to 10 RFID entries
+    const data = await collection.find({}).limit(100).toArray(); // Limit to 10 RFID entries
     res.json(data);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch RFID data', error: err.message });
@@ -203,7 +203,7 @@ app.get('/api/data/products', async (req, res) => {
   try {
     const db = client.db('inventar');
     const collection = db.collection('products');
-    const data = await collection.find({}).limit(10).toArray(); // Limit to 10 products
+    const data = await collection.find({}).limit(100).toArray(); // Limit to 10 products
     res.json(data);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch products', error: err.message });
@@ -306,7 +306,7 @@ app.get('/api/data/orders', async (req, res) => {
     const collection = db.collection('orders');
     
     // Filtrăm comenzile pentru a exclude cele marcate ca șterse
-    const data = await collection.find({ deleted: { $ne: true } }).limit(10).toArray();
+    const data = await collection.find({ deleted: { $ne: true } }).limit(100).toArray();
     res.json(data);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch orders', error: err.message });

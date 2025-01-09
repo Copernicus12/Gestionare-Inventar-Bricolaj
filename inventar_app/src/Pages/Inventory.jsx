@@ -238,13 +238,7 @@ const fetchProducts = () => {
             name="sezon"
             rules={[{ required: true, message: "Please enter the product season" }]}
           >
-            <Select>
-              <Select.Option value="Spring">Spring</Select.Option>
-              <Select.Option value="Summer">Summer</Select.Option>
-              <Select.Option value="Autumn">Autumn</Select.Option>
-              <Select.Option value="Winter">Winter</Select.Option>
-              <Select.Option value="All Year">All Year</Select.Option>
-            </Select>
+            <Input />
           </Form.Item>
           <Form.Item
             label="Category"
