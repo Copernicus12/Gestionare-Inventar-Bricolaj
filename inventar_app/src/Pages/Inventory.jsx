@@ -1,5 +1,7 @@
 import { Space, Table, Typography, Button, Modal, Form, Input, InputNumber, Select, Popconfirm } from "antd";
 import { useEffect, useState } from "react";
+import { jsPDF } from "jspdf";
+
 
 function Inventory() {
   const [loading, setLoading] = useState(false);
@@ -109,12 +111,106 @@ const fetchProducts = () => {
     });
 };
 
+const exportToPDF = () => {
+  const doc = new jsPDF('landscape');  
+  doc.setFontSize(10); 
+  doc.text("Product Inventory", 20, 20); 
+
+  const headers = ["Title", "Price", "Stock", "Cod Culoare", "Season", "Category", "Department"];
+  let yPosition = 30; 
+
+  const columnPositions = {
+    title: 20,
+    price: 70,
+    stock: 90,
+    cod_culoare: 115,
+    season: 150,
+    category: 175,
+    department: 220,
+  };
+
+  const columnWidths = {
+    title: 40,
+    price: 10,
+    stock: 10,
+    cod_culoare: 20,
+    season: 10,
+    category: 40,
+    department: 20,
+  };
+
+  const removeDiacritics = (str) => {
+    const diacriticsMap = {
+      'ș': 's', 'Ș': 'S', 'ț': 't', 'Ț': 'T',
+      'ă': 'a', 'Ă': 'A', 'â': 'a', 'Â': 'A',
+      'î': 'i', 'Î': 'I',
+    };
+    return str.replace(/[șȘțȚăĂîÎâÂ]/g, match => diacriticsMap[match] || match);
+  };
+
+  headers.forEach((header, index) => {
+    doc.setFontSize(12); 
+    doc.text(header, columnPositions[Object.keys(columnPositions)[index]], yPosition);
+  });
+
+  yPosition += 10; 
+
+  dataSource.forEach((product) => {
+    const title = removeDiacritics(product.title);
+    const price = removeDiacritics(String(product.price));
+    const stock = removeDiacritics(String(product.stock));
+    const codCuloare = removeDiacritics(String(product.cod_culoare));
+    const season = removeDiacritics(String(product.sezon));
+    const category = removeDiacritics(String(product.category));
+    const department = removeDiacritics(String(product.department));
+
+    const splitTitle = doc.splitTextToSize(title, columnWidths.title);
+
+    doc.setFontSize(9); 
+    doc.text(splitTitle, columnPositions.title, yPosition);
+    doc.text(`${price} lei`, columnPositions.price, yPosition);
+    doc.text(stock, columnPositions.stock, yPosition);
+    doc.text(codCuloare, columnPositions.cod_culoare, yPosition);
+    doc.text(season, columnPositions.season, yPosition);
+    doc.text(category, columnPositions.category, yPosition);
+    doc.text(department, columnPositions.department, yPosition);
+
+    yPosition += 13; 
+
+    if (yPosition > 190) { 
+      doc.addPage();
+      yPosition = 20; 
+
+      headers.forEach((header, index) => {
+        doc.setFontSize(12); 
+        doc.text(header, columnPositions[Object.keys(columnPositions)[index]], yPosition);
+      });
+      yPosition += 10; 
+    }
+  });
+
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(10);
+    doc.text(`Page ${i} of ${pageCount}`,140, 205); 
+    doc.text('Signature: _____________________', 225, 205); 
+  }
+
+  // Save the PDF
+  doc.save("inventory.pdf");
+};
+
+
   return (
     <Space size={20} direction="vertical" style={{ width: "100%" }}>
       <Typography.Title level={4}>Inventory</Typography.Title>
       <div>
         <Button type="primary" onClick={showAddModal} style={{ marginBottom: 16 }}>
           Add Product
+        </Button>
+        <Button type="default" onClick={exportToPDF} style={{ marginBottom: 16, marginLeft: 10 }}>
+          Export to PDF
         </Button>
       </div>
       <Table
